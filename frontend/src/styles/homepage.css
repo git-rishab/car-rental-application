@@ -1,0 +1,147 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #F6F7F9;
+}
+
+/* NavBar */
+nav{
+    width: 100%;
+    height: 3rem;
+    background-color: #fff;
+    padding: 10px 0px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+nav > div{
+    display: flex;
+    flex-direction: row;
+}
+#logo{
+    width: fit-content;
+    height: 30px;
+    margin-left: 40px;
+}
+#logo img{
+    width: 100%;
+    height: 100%;
+}
+#nav-content{
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: space-around;
+    width: 600px;
+    margin-left: auto;
+    margin-right: 40px;
+}
+#nav-content > div{
+    display: flex;
+    align-items: center;
+    padding: 10px 40px;
+}
+#login, #signup{
+    color: #fff;
+    background-color: #5CAFFC;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+}
+#login:hover{
+    cursor: pointer;
+    background-color: #6eafec;
+    transition: background-color 0.3s ease;
+}
+#signup{
+    background-color: #3563E9;
+}
+#signup:hover{
+    cursor: pointer;
+    background-color: #5f7dd8;
+    transition: background-color 0.3s ease;
+}
+
+#nav-content > div:nth-child(1):hover,#nav-content > div:nth-child(2):hover{
+    cursor: pointer;
+    color: #3563E9;
+    transition: color 0.3s ease;
+}
+
+
+/* Footer */
+
+footer{
+    position: fixed;
+    margin-top: 50px;
+    bottom: 0;
+    width: 100%;
+    padding-top: 80px;
+    padding-bottom: 60px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+#logo-footer img{
+    width: fit-content;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+#footer-content{
+    display: flex;
+    justify-content: space-between;
+    color: rgba(19, 19, 19, 0.6);
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    padding-left: 60px;
+    padding-right: 60px;
+    margin-bottom: 30px;
+}
+
+#other-section{
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+}
+#footer-content .heading-footer{
+    color: #424B5C;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    font-family: sans-serif;
+    margin-bottom: 20px;
+}
+#other-section p {
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+footer hr{
+    width: 95%;
+    margin: auto;
+}
+#policy-section{
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 60px;
+    margin-top: 30px;
+    color: #424B5C;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 200%;
+}
+#policy-section > div:nth-child(2){
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}

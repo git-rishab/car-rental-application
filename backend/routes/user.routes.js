@@ -9,6 +9,15 @@ const { UserModel } = require("../models/user.model");
 const userRoute = express.Router();
 require("dotenv").config();
 
+
+userRoute.get("/check", authorization , (req,res)=>{
+    try {
+        res.status(200).send({"ok":true, "message": "User is Logged In", "profilePic":req.user.profilePic});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
 userRoute.post("/register", async (req, res) => {
     try {
         const { name, profilePic, coverPic, aadhar, driving, email, address, pass, captcha } = req.body;
@@ -86,15 +95,47 @@ userRoute.get("/logout", async(req,res)=>{
     }
 })
 
-userRoute.get("/", authorization,(req,res)=>{
+userRoute.get("/", authorization,async(req,res)=>{
     try {
-        const user = req.user;
-        res.status(200).json({"ok":true, "data":user});
+        const user = await UserModel.findById(req.user._id).populate('rentedCars listedCars wishlist');
+        res.status(200).json({"ok":true, "data":{
+            email:user.email,
+            listedCars:user.listedCars,
+            address:user.address,
+            rentedCars:user.rentedCars,
+            wishlist:user.wishlist,
+            profilePic:user.profilePic,
+            name:user.name
+        }});
     } catch (error) {
         res.status(400).json({ "ok": false, "message": error.message })
     }
 })
 
+userRoute.patch("/wishlist/add", authorization,async(req,res)=>{
+    try {
+        const { carId } = req.query;
+        await UserModel.findByIdAndUpdate(req.user._id, {
+            $addToSet: {wishlist: carId}
+        })
+        res.status(200).json({"ok":true, "message":"Added to wishlist"});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+userRoute.patch("/wishlist/remove", authorization, async(req,res)=>{
+    try {
+        const { carId } = req.query;
+        await UserModel.findByIdAndUpdate(
+            req.user._id,
+            { $pull: { wishlist: carId } }
+        );
+        res.status(200).json({"ok":true, "message":"Wishlist updated"});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
 
 module.exports = {
     userRoute

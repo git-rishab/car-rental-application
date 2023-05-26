@@ -6,7 +6,8 @@ import BasicDatePicker from '../components/homepage/DatePicker';
 import Time from '../components/homepage/TimePicker';
 import Card from '../components/Cards';
 import { useEffect, useState } from 'react';
-
+import { Loader } from '@mantine/core';
+import styles from "../styles/dashboard.module.css";
 
 export default function Homepage() {
   const url = 'http://localhost:5000';
@@ -104,13 +105,16 @@ export default function Homepage() {
     
 
       {
-        loading ? (
-          <div>Loading...</div>
-        ) : (
+        loading ? 
+          (<div className={styles.loader}>
+            <Loader size="lg" />
+            <p>Fetching the best available cars for you...</p>
+          </div>)
+         : (
           <div>
             {
               cars?.map((el,i)=>{
-                return <Card key={i} car={el} />
+                return <Card key={i} car={el} rent={true} like={true} />
               })
             }
           </div>

@@ -1,9 +1,11 @@
 const express = require("express");
 const { CarModel } = require("../models/car.model");
 const { authorization } = require("../middlewares/jwt.middleware");
+const { UserModel } = require("../models/user.model");
 
 const carRoute = express.Router();
 
+// Get all cars
 carRoute.get("/", async(req,res)=>{
     try {
         const allCars = await CarModel.find();
@@ -13,12 +15,29 @@ carRoute.get("/", async(req,res)=>{
     }
 })
 
-
+// Add a new car
 carRoute.post("/add", authorization ,async(req,res)=>{
     try {
-        const carDetail = new CarModel(req.body)
+        const carDetail = new CarModel(req.body);
+        await UserModel.findByIdAndUpdate(req.user._id, {
+            $push: {listedCars: carDetail._id}
+        })
         await carDetail.save();
         res.status(200).json({"ok":true, "message":"Car Added Successfully"})
+    } catch (error) {
+        res.status(400).json({"ok":false, "message":error.message});
+    }
+})
+
+// Rent a car
+carRoute.patch("/rent",authorization, async(req,res)=>{
+    try {
+        const { carId } = req.query;
+        await UserModel.findByIdAndUpdate(req.user._id, {
+            $push: {renntedCars: carId}
+        })
+
+        res.status(200).json({"ok":true, "message":"Car Rented Successfully"})
     } catch (error) {
         res.status(400).json({"ok":false, "message":error.message});
     }
@@ -35,9 +54,6 @@ carRoute.get("/:carId", async(req,res)=>{
         res.status(400).json({"ok":false, "message":error.message});
     }
 })
-
-
-
 
 
 module.exports = {

@@ -40,22 +40,28 @@ const userSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
-    wishlist: {
-        type:Array,
-        default:[]
-    },
+    wishlist: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'car'
+        }
+    ],
     transaction: {
         type:mongoose.Schema.Types.ObjectId,
         ref:'transaction'
     },
-    rentedCars: {
-        type:Array,
-        default:[]
-    },
-    listedCars: {
-        type:Array,
-        default:[]
-    },
+    rentedCars: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'car'
+        }
+    ],
+    listedCars: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'car'
+        }
+    ],
     role:{
         type:String,
         enum:['admin','user'],

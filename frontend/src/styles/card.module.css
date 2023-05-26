@@ -89,3 +89,9 @@
     background-color: #5277e6;
     transition: background-color 0.4s ease;
 }
+
+.like:hover{
+    cursor: pointer;
+    transform: scale(1.2);
+    transition: transform 0.4s ease;
+}

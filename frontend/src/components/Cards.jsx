@@ -1,19 +1,65 @@
-import React from 'react'
-import { car, gas, transmission, like, unlike, users } from '../assets/asset';
+import React, { useState } from 'react'
+import { gas, transmission, like, unlike, users } from '../assets/asset';
 import styles from "../styles/card.module.css";
 import { useDisclosure } from '@mantine/hooks';
 import { Modal } from '@mantine/core';
 import CarModal from './CarModal';
+import { useToggle } from '@mantine/hooks';
+import { notification } from './notification';
+import styles2 from "../styles/dashboard.module.css";
+import { Loader } from '@mantine/core';
 
 export default function Cards(props) {
+  const url = "http://localhost:5000";
   const [opened, { open, close }] = useDisclosure(false);
-  
+  const [Like, toggle] = useToggle([false, true]);
+  const [loader, setLoader] = useState(false);
+
+  const handleLike = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      notification(null, 'Please Login First', 'white', '#EF5350');
+      return;
+    }
+    setLoader(true);
+    if (Like) {
+      const req = await fetch(`${url}/user/wishlist/remove?carId=${props.car._id}`,{
+        method:"PATCH",
+        headers:{
+          "authorization":token
+        }
+      });
+      const res = await req.json();
+
+      if (res.ok) {
+        notification('Voilla!!', res.message, 'white', '#3563E9');
+        toggle();
+      } else {
+        notification('Oops!', res.message, 'white', '#EF5350');
+      }
+    } else {
+      const req = await fetch(`${url}/user/wishlist/add?carId=${props.car._id}`,{
+        method:"PATCH",
+        headers:{
+          "authorization":token
+        }
+      });
+      const res = await req.json();
+      if (res.ok) {
+        notification('Voilla!!', res.message, 'white', '#3563E9');
+        toggle();
+      } else {
+        notification('Oops!', res.message, 'white', '#EF5350');
+      }
+    }
+    setLoader(false)
+  }
+
   return (
     <div className={styles.card}>
-
       <div>
         <div className={styles.title}>{props.car.title}</div>
-        <img src={unlike} alt="" />
+        {props.like ? loader ? <Loader size="sm" /> : (<img className={styles.like} onClick={handleLike} src={Like ? like : unlike} alt="wishlist" />) : ""}
       </div>
 
       <p className={styles.type}>{props.car.carType}</p>
@@ -28,12 +74,14 @@ export default function Cards(props) {
 
       <div>
         <div className={styles.price}>₹{props.car.rentPrice}.00/ <span className={styles.type}>day</span></div>
-        <div className={styles.more} onClick={open}>More info</div>
+        {
+          props.rent ? (<div className={styles.more} onClick={open}>More info</div>) : ''
+        }
         <Modal opened={opened} onClose={close} size="auto" centered>
           <CarModal car={props.car} />
         </Modal>
       </div>
-      
+
     </div>
   )
 }

@@ -12,8 +12,8 @@
 
 
 {
-  "heroImg":"https://github.com/git-rishab/mockend/assets/114337213/7f2e24dd-e857-4c42-bcdb-5c8565a636f7",
-  "images":["https://github.com/git-rishab/mockend/assets/114337213/5da95001-0422-47dc-8dd4-23d43b3752e8","https://github.com/git-rishab/mockend/assets/114337213/3e6a7afd-209e-4128-8c9a-5d5b261e22ba"],
+  "heroImg":"https://cdn.filestackcontent.com/VKbpycfxSueuHyUGBx8n",
+  "images":["https://cdn.filestackcontent.com/cHhVUs2vSHGPIo9jjXef","https://cdn.filestackcontent.com/kgKPH5sJSQ2SYIPOA2Wn"],
   "title":"Nissan GT - R",
   "description":"NISMO has became the embodient of Nissan's outstanding performance, inspired by the most unforgiving ground, the 'race track'.",
   "location":"Dhanbad",

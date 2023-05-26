@@ -1,5 +1,5 @@
 import React from 'react'
-import { useToggle, upperFirst } from '@mantine/hooks';
+import { useToggle, upperFirst, useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
@@ -12,25 +12,22 @@ import {
   Checkbox,
   Anchor,
   Stack,
+  LoadingOverlay
 } from '@mantine/core';
 import styles from '../../styles/login.module.css';
 import { google } from '../../assets/asset';
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 export default function AuthenticationForm(props) {
   const url = 'http://localhost:5000' // server;
   const url2 = "http://localhost:3000" // client 
-  const navigate = useNavigate();
   const [type, toggle] = useToggle([props.toggle1, props.toggle2]);
   const captchaRef = useRef(null);
   const [capthca, setCaptcha] = useState(false);
+  const [visible, { toggle:toggleDisclosure }] = useDisclosure(false);
 
-  // const redirect = (endpoint) => {
-  //   navigate(endpoint);
-  // }
 
   const form = useForm({
     initialValues: {
@@ -68,7 +65,6 @@ export default function AuthenticationForm(props) {
       const res = await req.json();
       if(res.ok){
         sessionStorage.setItem('token',res.token);
-        // props.close();
         window.location.href = `${url2}/dashboard`;
       } else {
         Swal.fire({
@@ -112,6 +108,7 @@ export default function AuthenticationForm(props) {
 
       <form onSubmit={form.onSubmit(() => { handleSubmit() })}>
         <Stack>
+          <LoadingOverlay visible={visible} overlayBlur={2} />
           {type === 'register' && (
             <TextInput
               required
@@ -177,7 +174,7 @@ export default function AuthenticationForm(props) {
               ? 'Already have an account? Login'
               : "Don't have an account? Register"}
           </Anchor>
-          <Button type="submit" radius="xl">
+          <Button type="submit" radius="xl" onClick={toggleDisclosure}>
             {upperFirst(type)}
           </Button>
         </Group>

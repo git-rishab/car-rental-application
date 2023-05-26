@@ -76,6 +76,18 @@ nav > div{
     transition: color 0.3s ease;
 }
 
+.profile img{
+    width: 100%;
+    height: 100%;
+}
+.profile{
+    width: 45px;
+    height: 45px;
+}
+.profile:hover{
+    cursor: pointer;
+}
+
 
 /* Footer */
 

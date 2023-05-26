@@ -3,7 +3,7 @@ const { client } = require("../config/db");
 require("dotenv").config();
 
 const authorization = (req,res,next) => {
-    const token = req.cookies.token;
+    const token = req.headers.authorization;
 
     jwt.verify(token, process.env.SECRET, async (err, decoded)=> {
         try {

@@ -36,7 +36,7 @@ body{
     border-radius: 8px;
     background-color: #fff;
     width: 38%;
-    height: 115px;
+    min-height: 115px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -47,6 +47,7 @@ body{
 .pick-drop-inner{
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .pick-drop-inner > div{
@@ -79,4 +80,20 @@ body{
 .sub-head{
     margin: 30px 0;
     color: rgba(19, 19, 19, 0.6);
+}
+
+@media screen and (max-width: 400px) {
+    #hero > div:nth-child(1){
+        display: none;
+    }
+    #hero{
+        justify-content: center;
+    }
+    
+}
+@media screen and (max-width: 840px) {
+    #pick-drop{
+        flex-direction: column;
+    }
+    
 }

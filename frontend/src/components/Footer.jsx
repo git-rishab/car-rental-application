@@ -6,10 +6,9 @@ export default function Footer() {
   return (
     <footer>
         <div id='footer-content'>
-            <div>
+            <div id='logo-footer-outer'>
                 <div id='logo-footer'><img src={logo} alt="logo" /></div>
                 <p>Our vision is to provide convenience and help increase your sales.</p>
-                <p></p>
             </div>
 
             <div id='other-section'>

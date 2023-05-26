@@ -5,9 +5,39 @@ import Location from '../components/homepage/Location-select';
 import BasicDatePicker from '../components/homepage/DatePicker';
 import Time from '../components/homepage/TimePicker';
 import Card from '../components/Cards';
+import { useEffect, useState } from 'react';
 
 
 export default function Homepage() {
+  const url = 'http://localhost:5000';
+  const [ cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    let isMounted = true;
+  
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const req = await fetch(`${url}/car`);
+        const res = await req.json();
+        if (isMounted) {
+          setLoading(false);
+          setCars(res.cars);
+        }
+      } catch (error) {
+        // Handle error here
+        console.error(error);
+      }
+    };
+  
+    fetchData();
+  
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <section id='homepage'>
       <div id='hero'>
@@ -71,8 +101,21 @@ export default function Homepage() {
       </div>
 
       <p className='sub-head'>Popular cars</p>
+    
 
-      <Card />
+      {
+        loading ? (
+          <div>Loading...</div>
+        ) : (
+          <div>
+            {
+              cars?.map((el,i)=>{
+                return <Card key={i} car={el} />
+              })
+            }
+          </div>
+        )
+      }
 
     </section>
   )

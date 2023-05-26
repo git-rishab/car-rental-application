@@ -11,6 +11,9 @@ import like from './Like.png';
 import unlike from './unlike.png';
 import transmission from './transmission.png';
 import users from './users.png';
+import background from './background.png';
+import view1 from './View2.png';
+import view2 from './View3.png';
 
 
 export {
@@ -26,5 +29,8 @@ export {
     like,
     unlike,
     transmission,
-    users
+    users,
+    background,
+    view1,
+    view2
 }

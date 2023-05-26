@@ -17,6 +17,9 @@ nav{
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     margin-bottom: 50px;
 }
+.ham{
+    display: none;
+}
 nav > div{
     display: flex;
     flex-direction: row;
@@ -89,9 +92,15 @@ footer{
 }
 
 #logo-footer img{
-    width: fit-content;
+    /* width: fit-content; */
+    width: 100%;
+    height: 100%;
+}
+
+#logo-footer{
     height: 50px;
     margin-bottom: 20px;
+    width: 90%;
 }
 
 #footer-content{
@@ -111,6 +120,7 @@ footer{
 #other-section{
     display: flex;
     width: 500px;
+    /* flex-wrap: wrap; */
     justify-content: space-between;
 }
 #footer-content .heading-footer{
@@ -144,5 +154,61 @@ footer hr{
 #policy-section > div:nth-child(2){
     display: flex;
     justify-content: space-between;
-    width: 300px;
+    width: fit-content;
+}
+
+@media screen and (max-width: 500px) {
+    #logo{
+        height: 20px;
+    }
+    nav{
+        height: 2.5rem;
+    }
+    #logo-footer{
+        height: 30px;
+        /* width: 100%; */
+    }
+    #other-section{
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        width: fit-content;
+    }
+    #policy-section{
+        /* display: none; */
+        flex-direction: column;
+    }
+    #policy-section div{
+        flex-direction: column;
+        margin-top: 10px;
+    }
+}
+
+
+@media screen and (max-width: 840px) {
+    #footer-content{
+        flex-direction: column;
+    }
+    .ham{
+        display: block;
+        padding-right: 40px;
+    }
+    nav{
+        justify-content: space-between;
+    }
+    #nav-content{
+        display: none;
+    }
+
+}
+
+@media screen and (max-width: 1000px) {
+    #footer-content{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #footer-content > div:nth-child(2){
+        margin-top: 40px;
+    }   
 }

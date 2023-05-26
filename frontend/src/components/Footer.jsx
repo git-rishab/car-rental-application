@@ -1,14 +1,14 @@
 import React from 'react'
 import { logo } from '../assets/asset';
+import '../styles/nav-footer.css'
 
 export default function Footer() {
   return (
     <footer>
         <div id='footer-content'>
-            <div>
+            <div id='logo-footer-outer'>
                 <div id='logo-footer'><img src={logo} alt="logo" /></div>
                 <p>Our vision is to provide convenience and help increase your sales.</p>
-                <p></p>
             </div>
 
             <div id='other-section'>
@@ -37,7 +37,7 @@ export default function Footer() {
         </div>
             <hr />
         <div id='policy-section'>
-            <div>©2022 MORENT. All rights reserved</div>
+            <div>©2022 DriveAway. All rights reserved</div>
             <div>
                 <div>Privacy & Policy</div>
                 <div>Terms & Condition</div>

@@ -1,0 +1,135 @@
+.container{
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    justify-content: space-between;
+}
+.container > div:nth-child(1){
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+}
+.background{
+    background-image: url('../assets/background.png');
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    width: 450px;
+    height: 330px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.background img{
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+.pics{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+.pics > div{
+    width: 30%;
+    height: 100%;
+    border-radius: 5px;
+}
+.pics img{
+    width: 95%;
+    height: 95%;
+    border-radius: 5px;
+    object-fit: contain;
+}
+.background2{
+    background-image: url('../assets/background.png');
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.background2 img{
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+.info{
+    display: flex;
+    flex-direction: column;
+    margin-left: 32px;
+    justify-content: center;
+    height: 100%;
+    width: 400px;
+}
+.info > div:nth-child(1){
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 140%;
+    color: #1A202C;
+}
+
+.desc{
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    text-justify: auto;
+    line-height: 200%;
+    letter-spacing: -0.02em;
+    color: #3D5278;
+    margin: 32px auto;
+    width: 95%;
+}
+
+.properties{
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 25px;
+    letter-spacing: -0.02em;
+    color: #90A3BF;
+}
+.value{
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    margin-left: 10px;
+    letter-spacing: -0.02em;
+    color: #3D5278;
+}
+.informations{
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+}
+.informations > div:nth-child(1){
+    margin-right: 40px;
+    margin-bottom: 10px;
+}
+
+.rent{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+}
+@media screen and (max-width: 750px) {
+   .container{
+    flex-direction: column;
+   }
+   .background{
+        width: 100%;
+   }
+}

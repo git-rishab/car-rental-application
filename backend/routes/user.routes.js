@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 const { TransactionModel } = require("../models/transaction.model");
 const { client } = require("../config/db");
 const { authorization } = require("../middlewares/jwt.middleware");
@@ -10,8 +11,17 @@ require("dotenv").config();
 
 userRoute.post("/register", async (req, res) => {
     try {
-        const { name, profilePic, coverPic, aadhar, driving, email, address, pass } = req.body;
+        const { name, profilePic, coverPic, aadhar, driving, email, address, pass, captcha } = req.body;
+        
+        const response = await axios.post(
+            `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_KEY}&response=${captcha}` );
+
+        // Check response status and send back to the client-side
+        if (!response.data.success) {
+            return res.status(200).send({"ok":false, "message": "Please Select proper Images"});
+        }
         const isUserExist = await UserModel.findOne({ email });
+            
         if(isUserExist){
             return res.status(400).json({ "ok": false, "message": "User Already Exist" })
         }
@@ -50,8 +60,8 @@ userRoute.post("/login", async (req, res) => {
                         user: isUserExist
                     }, process.env.SECRET , { expiresIn: '1h' });
 
-                    res.cookie("token",token);
-                    res.status(200).json({"ok":true, "message":"Login Successfull"})
+                    // res.cookie("token",token);
+                    res.status(200).json({"ok":true, "message":"Login Successfull", token})
                     
                 } else {
                     res.status(401).json({ "ok": false, "message": "Wrong Credentials" });
@@ -68,9 +78,18 @@ userRoute.post("/login", async (req, res) => {
 
 userRoute.get("/logout", async(req,res)=>{
     try {
-        await client.set(req.cookies.token,'blacklist');
-        await client.expire(req.cookies.token,3600);
+        await client.set(req.headers.authorization,'blacklist');
+        await client.expire(req.headers.authorization,3600);
         res.status(200).json({"ok":true, "message":"Logout successfull"});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+userRoute.get("/", authorization,(req,res)=>{
+    try {
+        const user = req.user;
+        res.status(200).json({"ok":true, "data":user});
     } catch (error) {
         res.status(400).json({ "ok": false, "message": error.message })
     }

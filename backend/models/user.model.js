@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     },
     profilePic: {
         type:String,
-        default:"https://github.com/git-rishab/mockend/assets/114337213/2cb8fa37-d699-44b8-b5d5-428b9d1310ba"
+        default:"https://cdn.filestackcontent.com/RuEgtpvGSbidugrFz91z"
     },
     coverPic : {
         type:String,

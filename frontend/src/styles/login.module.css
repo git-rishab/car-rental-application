@@ -1,0 +1,25 @@
+.google{
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(99, 99, 99, 0.2);
+    padding: 10px 0;
+    font-weight: 600;
+    color: rgb(83, 83, 83);
+}
+.google:hover{
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    transition: box-shadow 0.5s ease;
+    cursor: pointer;
+}
+.google img{
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+}
+
+nav .container{
+    border: none;
+    width: fit-content;
+}

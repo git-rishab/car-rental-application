@@ -1,0 +1,91 @@
+.card {
+    background-color: #fff;
+    width: 290px;
+    height: 350px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.card div {
+    display: flex;
+}
+
+.title {
+    width: 128px;
+    height: 24px;
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 25px;
+    display: flex;
+    align-items: center;
+    color: #1A202C;
+}
+.card > div:nth-child(1){
+    display: flex;
+    justify-content: space-between;
+}
+.type {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+    color: #90A3BF;
+    margin-top: 5px;
+}
+.image{
+    margin: 64px auto;
+}
+
+.info{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: #90A3BF;
+    display: flex;
+    align-items: center;
+}
+.info img{
+    margin-right: 5px;
+}
+
+.carInfo{
+    display: flex;
+    justify-content: space-between;
+}
+.card > div:last-child{
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price{
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 25px;
+    color: #1A202C;
+    margin-right: 4px;
+}
+
+.more{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20px;
+    gap: 8px;
+    width: 116px;
+    height: 44px;
+    right: 24px;
+    background-color: #3563E9;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.more:hover{
+    cursor: pointer;
+    background-color: #5277e6;
+    transition: background-color 0.4s ease;
+}

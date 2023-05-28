@@ -55,7 +55,7 @@
 .info>div:nth-child(1){
     display: flex;
     align-items: center;
-    min-width: 230px;
+    min-width: 250px;
     justify-content: space-between;
 }
 
@@ -78,19 +78,40 @@
 .loader > p{
     margin-top: 10px;
 }
-.dashboard {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.dashboard > div{
-    margin-right: 30px;
-}
 
 .no{
     text-align: center;
     color: #F44336;
     font-size: 20px;
+}
+
+/* Container */
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.more{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20px;
+    gap: 8px;
+    width: fit-content;
+    height: 44px;
+    right: 24px;
+    background-color: #3563E9;
+    margin: auto;
+    border-radius: 4px;
+    color: #fff;
+    margin-top: 40px;
+}
+
+.more:hover{
+    cursor: pointer;
+    background-color: #5277e6;
+    transition: background-color 0.4s ease;
 }
 
 @media screen and (max-width:500px){

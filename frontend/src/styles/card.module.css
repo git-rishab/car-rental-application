@@ -1,7 +1,7 @@
 .card {
     background-color: #fff;
     width: 290px;
-    height: 350px;
+    height: fit-content;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -74,10 +74,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0px 20px;
+    padding: 10px 30px;
     gap: 8px;
-    width: 116px;
-    height: 44px;
+    width: fit-content;
+    height: fit-content;
     right: 24px;
     background-color: #3563E9;
     border-radius: 4px;

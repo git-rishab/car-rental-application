@@ -8,15 +8,19 @@ import Card from '../components/Cards';
 import { useEffect, useState } from 'react';
 import { Loader } from '@mantine/core';
 import styles from "../styles/dashboard.module.css";
+import { authorization, url } from '../components/authorization';
 
 export default function Homepage() {
-  const url = 'http://localhost:5000';
   const [ cars, setCars] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+  const [loggedIn, setLoggedIn] = useState('');
+
   useEffect(() => {
     let isMounted = true;
-  
+    const check = authorization();
+    if(check){
+      setLoggedIn(check)
+    }
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -111,10 +115,10 @@ export default function Homepage() {
             <p>Fetching the best available cars for you...</p>
           </div>)
          : (
-          <div>
+          <div className = 'container'>
             {
               cars?.map((el,i)=>{
-                return <Card key={i} car={el} rent={true} like={true} />
+                return <Card key={i} car={el} rent={loggedIn === el.listedBy ? false : true} like={loggedIn === el.listedBy ? false : true} />
               })
             }
           </div>

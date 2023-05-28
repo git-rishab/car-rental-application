@@ -1,0 +1,82 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.container{
+    width: 60%;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px 40px;
+    margin-bottom: 70px;
+}
+
+.head{
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 23px;
+    color: #3563E9;
+    margin-top: 20px;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form > div{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.input{
+    width: 45%;
+}
+
+.button{
+    background-color: #3563E9;
+    width: 70%;
+    margin: auto;
+}
+.button:hover{
+    background-color: #4972ee;
+    transition: background-color 0.3s ease;
+}
+
+.loader{
+    margin: auto;
+}
+
+.submit{
+    margin-top: 30px;
+    width: 100%;
+}
+
+.upload{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 100px;
+    background-color: aliceblue;
+    border-radius: 8px;
+    border: 1px solid #F0F8FF;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.upload:hover{
+    cursor: pointer;
+    border: 1px solid #3563E9;
+    transition: border 0.3s ease;
+}
+
+.upload > div{
+    height: 80%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

@@ -75,6 +75,12 @@ body{
     width: 100px;
 }
 
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
 /* Subheading */
 .sub-head{
     margin: 30px 0;

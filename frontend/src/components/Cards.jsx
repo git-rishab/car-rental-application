@@ -6,14 +6,19 @@ import { Modal } from '@mantine/core';
 import CarModal from './CarModal';
 import { useToggle } from '@mantine/hooks';
 import { notification } from './notification';
-import styles2 from "../styles/dashboard.module.css";
 import { Loader } from '@mantine/core';
+import { useNavigate } from "react-router-dom";
 
 export default function Cards(props) {
   const url = "http://localhost:5000";
   const [opened, { open, close }] = useDisclosure(false);
   const [Like, toggle] = useToggle([false, true]);
   const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
+
+  const redirect = (endpoint) => {
+    navigate(endpoint)
+  }
 
   const handleLike = async () => {
     const token = sessionStorage.getItem("token");
@@ -52,7 +57,7 @@ export default function Cards(props) {
         notification('Oops!', res.message, 'white', '#EF5350');
       }
     }
-    setLoader(false)
+    setLoader(false);
   }
 
   return (
@@ -75,7 +80,7 @@ export default function Cards(props) {
       <div>
         <div className={styles.price}>₹{props.car.rentPrice}.00/ <span className={styles.type}>day</span></div>
         {
-          props.rent ? (<div className={styles.more} onClick={open}>More info</div>) : ''
+          props.rent ? (<div className={styles.more} onClick={open}>More info</div>) : (<div className={styles.more} onClick={()=>{ sessionStorage.setItem('car',JSON.stringify(props)) ;redirect('/car/edit')}}>Edit</div>)
         }
         <Modal opened={opened} onClose={close} size="auto" centered>
           <CarModal car={props.car} />

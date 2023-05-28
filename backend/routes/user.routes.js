@@ -12,7 +12,7 @@ require("dotenv").config();
 
 userRoute.get("/check", authorization , (req,res)=>{
     try {
-        res.status(200).send({"ok":true, "message": "User is Logged In", "profilePic":req.user.profilePic});
+        res.status(200).send({"ok":true, "message": "User is Logged In", "profilePic":req.user.profilePic, "id":req.user._id});
     } catch (error) {
         res.status(400).json({ "ok": false, "message": error.message })
     }

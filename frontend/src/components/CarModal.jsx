@@ -14,15 +14,17 @@ export default function CarModal(props) {
                 <img src={props.car.heroImg} alt="background" />
             </div>
             <div className={styles.pics}>
-                <div className={styles.background2} style={{height: '110px'}}>
-                    <img src={props.car.heroImg} alt="car" />
-                </div>
-                <div>
-                    <img src={props.car.images[0]} alt="view1" />
-                </div>
-                <div>
-                    <img src={props.car.images[1]} alt="view2" />
-                </div>
+                {
+                    props.car?.images.map((el,i)=>{
+                        return i === 0 ? (<div key={i} className={styles.background2} style={{height: '110px'}}>
+                        <img src={el} alt="car" />
+                    </div>) : 
+                         (<div key={i} >
+                        <img src={el} alt="car" />
+                    </div>)
+                    })
+                }
+                
             </div>
         </div>
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useToggle, upperFirst, useDisclosure } from '@mantine/hooks';
+import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
@@ -26,7 +26,7 @@ export default function AuthenticationForm(props) {
   const [type, toggle] = useToggle([props.toggle1, props.toggle2]);
   const captchaRef = useRef(null);
   const [capthca, setCaptcha] = useState(false);
-  const [visible, { toggle:toggleDisclosure }] = useDisclosure(false);
+  const [visible, toggleDisclosure] = useToggle([false,true]);
 
 
   const form = useForm({
@@ -68,12 +68,12 @@ export default function AuthenticationForm(props) {
         window.location.href = `${url2}/dashboard`;
       } else {
         Swal.fire({
-          icon: 'error',
+          icon: 'error',  
           title: res.message,
           text: '',
         })
       }
-
+      
     } else {
       const req = await fetch(`${url}/user/register`,{
         method:"POST",
@@ -90,10 +90,23 @@ export default function AuthenticationForm(props) {
       })
 
       const res = await req.json();
-      console.log(res);
+      
+      if(res.ok){
+        Swal.fire(
+          'Voilla!',
+          res.message,
+          'success'
+        )
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: res.message,
+          text: '',
+        })
+      }
     }
+    toggleDisclosure();
   }
-
   return (
     <Paper radius="md" p="xl" {...props} className={styles.container}>
       <Text size="lg" weight={500}>
@@ -106,7 +119,7 @@ export default function AuthenticationForm(props) {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => { handleSubmit() })}>
+      <form onSubmit={form.onSubmit(()=>{toggleDisclosure(); handleSubmit()})}>
         <Stack>
           <LoadingOverlay visible={visible} overlayBlur={2} />
           {type === 'register' && (
@@ -174,7 +187,7 @@ export default function AuthenticationForm(props) {
               ? 'Already have an account? Login'
               : "Don't have an account? Register"}
           </Anchor>
-          <Button type="submit" radius="xl" onClick={toggleDisclosure}>
+          <Button type="submit" radius="xl">
             {upperFirst(type)}
           </Button>
         </Group>

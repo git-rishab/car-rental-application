@@ -1,26 +1,22 @@
 import React from 'react'
 import { hero1, hero2, search, pickMark, dropMark } from '../assets/asset'
 import '../styles/homepage.css';
-import Location from '../components/homepage/Location-select';
-import BasicDatePicker from '../components/homepage/DatePicker';
-import Time from '../components/homepage/TimePicker';
 import Card from '../components/Cards';
 import { useEffect, useState } from 'react';
-import { Loader } from '@mantine/core';
+import { Loader, Select } from '@mantine/core';
 import styles from "../styles/dashboard.module.css";
-import { authorization, url } from '../components/authorization';
+import { url } from '../components/authorization';
+import { DateTimePicker } from '@mantine/dates';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function Homepage() {
-  const [ cars, setCars] = useState([]);
+  const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState('');
+  const { id:loggedIn } = useSelector((store)=>store.user);
 
   useEffect(() => {
     let isMounted = true;
-    const check = authorization();
-    if(check){
-      setLoggedIn(check)
-    }
+
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -35,9 +31,9 @@ export default function Homepage() {
         console.error(error);
       }
     };
-  
+
     fetchData();
-  
+
     return () => {
       isMounted = false;
     };
@@ -46,8 +42,8 @@ export default function Homepage() {
   return (
     <section id='homepage'>
       <div id='hero'>
-        <div><img src={ hero1 } alt="Hero1" /></div>
-        <div><img src={ hero2 } alt="Hero2" /></div>
+        <div><img src={hero1} alt="Hero1" /></div>
+        <div><img src={hero2} alt="Hero2" /></div>
       </div>
 
       <div id='pick-drop'>
@@ -59,46 +55,76 @@ export default function Homepage() {
 
           <div className='pick-drop-inner'>
             <div>
-            <p>Locations</p>
-              <Location />
+              <Select
+                className={styles.input}
+                label="Location"
+                placeholder="Select pick-up Loaction"
+                // {...form.getInputProps('capacity')}
+                // onChange={(value) => form.setFieldValue('capacity', value)}
+                data={[
+                  { value: 'Dhanbad', label: 'Dhanbad' },
+                  { value: 'Ranchi', label: 'Ranchi' },
+                  { value: 'Asansol', label: 'Asansol' },
+                  { value: 'Kolkata', label: 'Kolkata' },
+                  { value: 'Bokaro', label: 'Bokaro' },
+                  { value: 'Delhi', label: 'Delhi' }
+                ]}
+                withAsterisk
+              />
             </div>
             <div className='vertical-line'></div>
             <div>
-              <p>Date</p>
-              <BasicDatePicker time={1} />
-            </div>
-            <div className='vertical-line'></div>
-            <div>
-              <p>Time</p>
-              <Time time={1} />
+              <DateTimePicker
+                valueFormat="DD MMM YYYY hh:mm A"
+                label="Pick date and time"
+                placeholder="Pick date and time"
+                maw={400}
+                mx="auto"
+                withAsterisk
+              />
             </div>
           </div>
         </div>
 
         <div className='search'>
-          <img src={ search } alt="" />
+          <img src={search} alt="" />
         </div>
 
         <div className='drop-pick'>
-        <div>
+          <div>
             <img src={dropMark} alt="drop" />
             Drop-Off
           </div>
 
           <div className='pick-drop-inner'>
             <div>
-            <p>Locations</p>
-              <Location />
+              <Select
+                className={styles.input}
+                label="Location"
+                placeholder="Select pick-up Loaction"
+                // {...form.getInputProps('capacity')}
+                // onChange={(value) => form.setFieldValue('capacity', value)}
+                data={[
+                  { value: 'Dhanbad', label: 'Dhanbad' },
+                  { value: 'Ranchi', label: 'Ranchi' },
+                  { value: 'Asansol', label: 'Asansol' },
+                  { value: 'Kolkata', label: 'Kolkata' },
+                  { value: 'Bokaro', label: 'Bokaro' },
+                  { value: 'Delhi', label: 'Delhi' }
+                ]}
+                withAsterisk
+              />
             </div>
             <div className='vertical-line'></div>
             <div>
-              <p>Date</p>
-              <BasicDatePicker time={4} />
-            </div>
-            <div className='vertical-line'></div>
-            <div>
-              <p>Time</p>
-              <Time time={4} />
+              <DateTimePicker
+                valueFormat="DD MMM YYYY hh:mm A"
+                label="Pick date and time"
+                placeholder="Pick date and time"
+                maw={400}
+                mx="auto"
+                withAsterisk
+              />
             </div>
           </div>
 
@@ -106,23 +132,23 @@ export default function Homepage() {
       </div>
 
       <p className='sub-head'>Popular cars</p>
-    
+
 
       {
-        loading ? 
+        loading ?
           (<div className={styles.loader}>
             <Loader size="lg" />
             <p>Fetching the best available cars for you...</p>
           </div>)
-         : (
-          <div className = 'container'>
-            {
-              cars?.map((el,i)=>{
-                return <Card key={i} car={el} rent={loggedIn === el.listedBy ? false : true} like={loggedIn === el.listedBy ? false : true} />
-              })
-            }
-          </div>
-        )
+          : (
+            <div className='container'>
+              {
+                cars?.map((el, i) => {
+                  return <Card key={i} car={el} rent={loggedIn === el.listedBy ? false : true} like={loggedIn === el.listedBy ? false : true} />
+                })
+              }
+            </div>
+          )
       }
 
     </section>

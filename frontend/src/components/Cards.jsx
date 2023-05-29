@@ -8,22 +8,31 @@ import { useToggle } from '@mantine/hooks';
 import { notification } from './notification';
 import { Loader } from '@mantine/core';
 import { useNavigate } from "react-router-dom";
+import { url } from './authorization';
+import { useSelector, useDispatch } from 'react-redux';
+import { request } from '../features/userSlice';
 
 export default function Cards(props) {
-  const url = "http://localhost:5000";
+  const { token } = useSelector((store)=>store.user);
   const [opened, { open, close }] = useDisclosure(false);
-  const [Like, toggle] = useToggle([false, true]);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  if(props.isLiked){
+    var [Like, toggle] = useToggle([true, false]);
+  } else {
+    var [Like, toggle] = useToggle([false, true]);
+  }
 
   const redirect = (endpoint) => {
     navigate(endpoint)
   }
 
   const handleLike = async () => {
-    const token = sessionStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     if (!token) {
-      notification(null, 'Please Login First', 'white', '#EF5350');
+      notification(null, 'Please Login First', 'white', '#F44336');
       return;
     }
     setLoader(true);
@@ -38,9 +47,10 @@ export default function Cards(props) {
 
       if (res.ok) {
         notification('Voilla!!', res.message, 'white', '#3563E9');
+        dispatch(request());
         toggle();
       } else {
-        notification('Oops!', res.message, 'white', '#EF5350');
+        notification('Oops!', res.message, 'white', '#F44336');
       }
     } else {
       const req = await fetch(`${url}/user/wishlist/add?carId=${props.car._id}`,{
@@ -52,9 +62,10 @@ export default function Cards(props) {
       const res = await req.json();
       if (res.ok) {
         notification('Voilla!!', res.message, 'white', '#3563E9');
+        dispatch(request());
         toggle();
       } else {
-        notification('Oops!', res.message, 'white', '#EF5350');
+        notification('Oops!', res.message, 'white', '#F44336'); // red
       }
     }
     setLoader(false);

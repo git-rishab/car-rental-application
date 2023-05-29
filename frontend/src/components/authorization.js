@@ -1,5 +1,5 @@
 const url = "http://localhost:5000";
-const client = ""
+const client = "http://localhost:3000"
 
 
 const authorization = async () => {
@@ -11,15 +11,11 @@ const authorization = async () => {
             }
         });
         const res = await req.json();
-        
         if (!res.ok) {
             return false;
         }
-        
         return res.id;
-
     } catch (error) {
-        // Handle error here
         console.error(error);
     }
 };

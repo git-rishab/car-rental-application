@@ -49,12 +49,23 @@ carRoute.patch("/edit", authorization ,async(req,res)=>{
 // Rent a car
 carRoute.patch("/rent",authorization, async(req,res)=>{
     try {
-        const { carid } = req.query;
+        const { carId } = req.query;
         await UserModel.findByIdAndUpdate(req.user._id, {
             $push: {renntedCars: carId}
         })
 
         res.status(200).json({"ok":true, "message":"Car Rented Successfully"})
+    } catch (error) {
+        res.status(400).json({"ok":false, "message":error.message});
+    }
+})
+
+// Delete a car
+carRoute.delete("/delete", authorization, async(req,res)=>{
+    try {
+        const { carId } = req.query;
+        await CarModel.findByIdAndDelete(carId);
+        res.status(200).json({"ok":true, "message":"Car Deleted Successfully"})
     } catch (error) {
         res.status(400).json({"ok":false, "message":error.message});
     }

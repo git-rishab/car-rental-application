@@ -5,43 +5,36 @@ import "../styles/nav-footer.css"
 import { useDisclosure } from '@mantine/hooks';
 import { Drawer } from '@mantine/core';
 import LoginForm from './login/Login';
-import Hamburger from 'hamburger-react'
+import Hamburger from 'hamburger-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { closeDrawer, openDrawer } from '../features/userSlice';
+
 
 export default function Navbar() {
-  const url = "http://localhost:5000";
+  const { profilePic, token } = useSelector((store) => store.user);
   const navigate = useNavigate();
   const [login, setLogin] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
   const [isOpen, setOpen] = useState(false);
   const [loggedIn,setLoggedIn] = useState('')
-  
+  const dispatch = useDispatch();
+  const { isOpenn } = useSelector((store) => store.user);
+
   useEffect(() => {
-    let isMounted = true;
-    const token = sessionStorage.getItem("token");
-    const fetchData = async () => {
-      try {
-        const req = await fetch(`${url}/user/check`,{
-          method:"GET",
-          headers:{
-            "authorization":token
-          }
-        });
-        const res = await req.json();
-        if(res.ok){
-          setLoggedIn(res.profilePic)
-        }
-      } catch (error) {
-        // Handle error here
-        console.error(error);
-      }
-    };
-  
-    fetchData();
-  
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    if(profilePic){
+      setLoggedIn(profilePic)
+    } else {
+      setLoggedIn('')
+    }
+  }, [token]);
+
+  useEffect(()=>{
+    if(isOpenn){
+      open()
+    } else {
+      close();
+    }
+  },[isOpenn])
 
   const redirect = (endpoint) => {
     navigate(endpoint)
@@ -59,22 +52,22 @@ export default function Navbar() {
         <div>About Us</div>
 
         {/* Login Popup */}
-        <Drawer opened={opened} onClose={close}>
+        <Drawer opened={opened} onClose={()=>dispatch(closeDrawer())}>
           <LoginForm toggle1 = {login ? 'login' : 'register'} toggle2 = {login ? 'register' : 'login'} />
         </Drawer>
 
         {
           loggedIn ? (<div className='profile' onClick={()=>redirect('/dashboard')}><img src={loggedIn} alt="profilePic" /></div>) : (
             <>
-            <div id='login' onClick={()=> {open(); setLogin(true)}} > Login </div>
-            <div id='signup' onClick={()=> {open(); setLogin(false)}}> Signup </div>
+            <div id='login' onClick={()=> {dispatch(openDrawer()); setLogin(true)}} > Login </div>
+            <div id='signup' onClick={()=> {dispatch(openDrawer()); setLogin(false)}}> Signup </div>
             </>
           )
         }
       </div>
 
       <div className='ham'>
-        <Hamburger toggled={isOpen} color='#3563E9' toggle={setOpen} onClick={()=> {open(); setLogin(true)}} />
+        <Hamburger toggled={isOpen} color='#3563E9' toggle={setOpen} onClick={()=> {dispatch(openDrawer()); setLogin(true)}} />
       </div>
     </nav>
   )

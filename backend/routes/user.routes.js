@@ -14,7 +14,7 @@ userRoute.get("/check", authorization , (req,res)=>{
     try {
         res.status(200).send({"ok":true, "message": "User is Logged In", "profilePic":req.user.profilePic, "id":req.user._id});
     } catch (error) {
-        res.status(400).json({ "ok": false, "message": error.message })
+        res.status(200).json({ "ok": false, "message": error.message })
     }
 })
 
@@ -59,7 +59,7 @@ userRoute.post("/register", async (req, res) => {
 userRoute.post("/login", async (req, res) => {
     try {
         const { email, pass } = req.body;
-        const isUserExist = await UserModel.findOne({ email:email.toLowerCase() });
+        const isUserExist = await UserModel.findOne({ email:email.toLowerCase() }).populate('rentedCars listedCars wishlist');
         if (isUserExist) {
 
             bcrypt.compare(pass, isUserExist.pass, async (err, result)=> {
@@ -70,8 +70,9 @@ userRoute.post("/login", async (req, res) => {
                     }, process.env.SECRET , { expiresIn: '1h' });
 
                     // res.cookie("token",token);
-                    res.status(200).json({"ok":true, "message":"Login Successfull", token})
-                    
+                    res.status(200).json({"ok":true, "message":"Login Successfull", token,profilePic:isUserExist.profilePic, id:isUserExist._id
+                })
+                
                 } else {
                     res.status(401).json({ "ok": false, "message": "Wrong Credentials" });
                 }
@@ -85,7 +86,7 @@ userRoute.post("/login", async (req, res) => {
     }
 })
 
-userRoute.get("/logout", async(req,res)=>{
+userRoute.get("/logout", authorization,async(req,res)=>{
     try {
         await client.set(req.headers.authorization,'blacklist');
         await client.expire(req.headers.authorization,3600);

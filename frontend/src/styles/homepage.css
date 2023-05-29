@@ -27,7 +27,7 @@ body{
 #pick-drop{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-top: 40px;
 }
 
@@ -35,24 +35,18 @@ body{
     padding: 24px 48px 28px 48px;
     border-radius: 8px;
     background-color: #fff;
-    width: 38%;
+    width: 36%; 
     min-height: 115px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 .drop-pick img{
     margin-right: 8px;
 }
 .pick-drop-inner{
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.pick-drop-inner > div{
-    display: flex;
-    flex-direction: column;
+    justify-content: space-around;
 }
 
 .search{
@@ -70,10 +64,6 @@ body{
     background-color: #C3D4E9;
     height: inherit;
 }
-.pick-drop-inner .MuiInputBase-input{
-    height: 8px;
-    width: 100px;
-}
 
 .container{
     display: flex;
@@ -87,18 +77,43 @@ body{
     color: rgba(19, 19, 19, 0.6);
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 550px) {
     #hero > div:nth-child(1){
         display: none;
+    }
+    #hero > div:nth-child(2){
+        width: 95%;
     }
     #hero{
         justify-content: center;
     }
-    
+    .vertical-line{
+        display: none;
+    }
+    .container{
+        align-items: center;
+        justify-content: center;
+    }
 }
 @media screen and (max-width: 840px) {
     #pick-drop{
         flex-direction: column;
     }
-    
+    #pick-drop > div {
+        margin-bottom: 20px;
+    }
+    .container{
+        align-items: center;
+        justify-content: center;
+    }
+    .drop-pick{
+        width: 65%;
+    }
+
+}
+
+@media screen and (max-width: 1300px) {
+    .pick-drop-inner{
+        flex-direction: column;
+    }
 }

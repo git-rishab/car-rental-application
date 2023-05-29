@@ -8,7 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Upload } from 'tabler-icons-react';
 import { widget } from '../components/widget';
 import { notification } from "../components/notification";
-import { authorization, url } from '../components/authorization';
+import { url } from '../components/authorization';
+import Swal from 'sweetalert2';
 
 export default function Addcar() {
     const navigate = useNavigate();
@@ -23,29 +24,40 @@ export default function Addcar() {
     // Check for authorization and some events on page load
     useEffect(() => {
         let isMounted = true;
-        const check = authorization();
+        const check = async () => {
+            try {
+                const req = await fetch(`${url}/user/check`, {
+                    method: "GET",
+                    headers: {
+                        "authorization": sessionStorage.getItem("token")
+                    }
+                });
+                const res = await req.json();
+                if (!res.ok) {
+                    sessionStorage.clear();
+                    redirect('/unauthenticated');
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        check();
+
         const car = JSON.parse(sessionStorage.getItem('car'));
-        if(action == 'edit' && !car){
+        if (action == 'edit' && !car) {
             redirect('/unauthenticated');
             return;
-        }
-
-        if(!check){
-            sessionStorage.clear();
-            redirect('/unauthenticated');
         }
         return () => {
             isMounted = false;
         };
     }, []);
 
-
-
-
     // Handling actions based on params 
-    if(action === 'edit'){
+    if (action === 'edit') {
         const car = JSON.parse(sessionStorage.getItem('car'));
-        if(!car){
+        if (!car) {
             redirect('/unauthenticated');
             return;
         }
@@ -70,16 +82,6 @@ export default function Addcar() {
 
     // Form inputs
     const form = useForm({
-        // initialValues: {
-        //     title: '',
-        //     carType: '', // confusion
-        //     rentPrice: 0,
-        //     capacity: '', // confusion
-        //     transmission: '', // confusion
-        //     location: '',
-        //     fuelCapacity: 1,
-        //     description: ''
-        // },
         initialValues: initialValues,
 
         // functions will be used to validate values at corresponding key
@@ -94,7 +96,7 @@ export default function Addcar() {
             description: (value) => (value.length < 20 ? 'Description must have at least 20 letters' : null)
         },
     });
-    
+
 
 
     // Get current time in specified format related to MongoDB
@@ -106,31 +108,31 @@ export default function Addcar() {
     }
 
     // Handling form submission
-    const handleSubmit = async() => {
-        if(action == 'edit'){
+    const handleSubmit = async () => {
+        if (action == 'edit') {
             const car = JSON.parse(sessionStorage.getItem('car'));
-            const req = await fetch(`${url}/car/edit?carId=${car.car._id}`,{
-                method:"PATCH",
-                headers:{
-                    "content-type":"application/json",
-                    "authorization":sessionStorage.getItem("token")
+            const req = await fetch(`${url}/car/edit?carId=${car.car._id}`, {
+                method: "PATCH",
+                headers: {
+                    "content-type": "application/json",
+                    "authorization": sessionStorage.getItem("token")
                 },
-                body:JSON.stringify(form.values)
+                body: JSON.stringify(form.values)
             })
             const res = await req.json();
             setLoading(false);
-            if(res.ok){
+            if (res.ok) {
                 sessionStorage.removeItem('car');
-                sessionStorage.setItem('notification',res.message)
+                notification('Edited successfully', res.message, 'white', '#12B886');
                 redirect('/dashboard');
             } else {
-                notification('Oops!', res.message, 'white', '#EF5350');
+                notification('Oops!', res.message, 'white', '#F44336');
             }
             return;
         }
 
         const images = JSON.parse(sessionStorage.getItem('images'))
-        if(!images){
+        if (!images) {
             notification('Please upload Images', 'You Need to upload atleast 1 image', 'white', '#EF5350');
             setLoading(false);
             return;
@@ -138,33 +140,57 @@ export default function Addcar() {
         form.values.images = images;
         form.values.listedDate = getCurrentTime();
 
-        const req = await fetch(`${url}/car/add`,{
-            method:"POST",
-            headers:{
-                "content-type":"application/json",
-                "authorization":sessionStorage.getItem("token")
+        const req = await fetch(`${url}/car/add`, {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+                "authorization": sessionStorage.getItem("token")
             },
-            body:JSON.stringify(form.values)
+            body: JSON.stringify(form.values)
         })
         const res = await req.json();
         setLoading(false);
 
-        if(res.ok){
+        if (res.ok) {
             sessionStorage.removeItem('images');
-            sessionStorage.setItem('notification',res.message);
+            notification('Added successfully', res.message, 'white', '#12B886');
             redirect('/dashboard');
         } else {
             notification('Oops!', res.message, 'white', '#EF5350');
         }
     }
 
+    // Handleing delete
+    const handleDelete = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert it!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0080FF',
+            cancelButtonColor: '#F44336',
+            confirmButtonText: 'Yes, Remove!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`${url}/car/delete??carId=${car.car._id}`,{
+                    method:"DELETE",
+                    headers:{
+                        "authorization":sessionStorage.getItem('token')
+                    }
+                })
+                
+                notification('Car Removed Successfully', 'Your car has been remmoved!', 'white', '#F44336');
+                redirect('/dashboard');
+            }
+        })
+    }
     return (
         <div className={styles.container}>
             <p className={styles2.subHead}>{upperFirst(action)} a Car for Rent</p>
             <p className={styles2.sub}>Please enter your car info</p>
             <p className={styles.head}>CAR INFO</p>
             <div>
-                <form className={styles.form} onSubmit={form.onSubmit(() =>{setLoading(true); handleSubmit()})}>
+                <form className={styles.form} onSubmit={form.onSubmit(() => { setLoading(true); handleSubmit() })}>
                     <div>
                         <TextInput className={styles.input} label="Car Title" placeholder="Your Title" {...form.getInputProps('title')} />
                         <Select
@@ -231,24 +257,27 @@ export default function Addcar() {
                         />
                         <TextInput className={styles.input} label="Short Description" placeholder="Enter a short description" {...form.getInputProps('description')} />
                     </div>
-                    
+
                     {
                         action === 'add' ? <div className={styles.upload} onClick={widget} >
-                        <div>
-                            <Upload size={50} strokeWidth={1.5} color={'#3563E9'}/>
-                            <p className={styles2.sub}>Click to upload Images of Car</p>
-                        </div>
-                        </div> : <p style={{marginTop:'20px'}} className={styles2.no}>* You won't be able to Edit images as of Now *</p>
-                    
+                            <div>
+                                <Upload size={50} strokeWidth={1.5} color={'#3563E9'} />
+                                <p className={styles2.sub}>Click to upload Images of Car</p>
+                            </div>
+                        </div> : <p style={{ marginTop: '20px' }} className={styles2.no}>* You won't be able to Edit images as of Now *</p>
+
                     }
                     <div className={styles.submit}>
                         {
-                            loading ? <Loader size="md" className={styles.loader} /> : <Button type="submit" className={styles.button} value='Register'>
-                            Submit
-                            </Button>
+                            loading ? <Loader size="md" className={styles.loader} /> : (<>
+                                <Button type="submit" className={styles.button} value='Register'>
+                                    {action === 'edit' ? 'Edit' : 'Submit'}</Button>
+                                {action === 'edit' && <Button style={{ width: '70%', margin: 'auto', marginTop: '20px' }} className={styles2.del} onClick={handleDelete} value='Remove'>
+                                    Remove</Button>}
+                            </>)
                         }
                     </div>
-                    
+
                 </form>
 
             </div>
@@ -256,4 +285,3 @@ export default function Addcar() {
         </div>
     )
 }
-// 

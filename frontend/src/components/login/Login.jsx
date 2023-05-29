@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
@@ -17,17 +17,25 @@ import {
 import styles from '../../styles/login.module.css';
 import { google } from '../../assets/asset';
 import ReCAPTCHA from "react-google-recaptcha";
-import { useRef, useState } from 'react';
 import Swal from 'sweetalert2';
+import { url, client } from '../authorization';
+import { useDispatch } from 'react-redux';
+import { login, closeDrawer } from '../../features/userSlice';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function AuthenticationForm(props) {
-  const url = 'http://localhost:5000' // server;
-  const url2 = "http://localhost:3000" // client 
+  const url2 = client // client 
   const [type, toggle] = useToggle([props.toggle1, props.toggle2]);
   const captchaRef = useRef(null);
   const [capthca, setCaptcha] = useState(false);
   const [visible, toggleDisclosure] = useToggle([false,true]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const redirect = (endpoint)=>{
+    navigate(endpoint)
+  }
 
   const form = useForm({
     initialValues: {
@@ -49,6 +57,7 @@ export default function AuthenticationForm(props) {
     if (!token && type == 'register') {
       // reCAPTCHA is not completed, handle the error or show a message
       setCaptcha(true);
+      toggleDisclosure();
       return;
     }
     setCaptcha(false);
@@ -64,8 +73,10 @@ export default function AuthenticationForm(props) {
       })
       const res = await req.json();
       if(res.ok){
+        dispatch(login({token:res.token,profilePic:res.profilePic, id:res.id}));
+        dispatch(closeDrawer());
         sessionStorage.setItem('token',res.token);
-        window.location.href = `${url2}/dashboard`;
+        redirect('/dashboard');
       } else {
         Swal.fire({
           icon: 'error',  
@@ -93,10 +104,11 @@ export default function AuthenticationForm(props) {
       
       if(res.ok){
         Swal.fire(
-          'Voilla!',
+          '',
           res.message,
           'success'
         )
+        toggle();
       } else {
         Swal.fire({
           icon: 'error',

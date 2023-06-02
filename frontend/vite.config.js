@@ -8,12 +8,6 @@ export default defineConfig({
     outDir: 'build',
   },
   plugins: [reactRefresh()],
-  resolve: {
-    alias: {
-      // Add this alias to handle .js files as .jsx files
-      './src/index.js': './src/index.jsx',
-    },
-  },
   server: {
     // Enable server-side fallback
     fs: {

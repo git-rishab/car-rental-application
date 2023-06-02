@@ -1,26 +1,31 @@
 import { defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
+import { createServer } from 'vite';
 
 export default defineConfig({
   // This changes the output dir from dist to build
-  // comment this out if that isn't relevant for your project
+  // comment this out if it isn't relevant for your project
   build: {
     outDir: 'build',
   },
   plugins: [reactRefresh()],
   server: {
-    // Enable server-side fallback
-    fs: {
-      strict: true,
-    },
-    proxy: {
-      // Fallback all routes to index.html
-      '/api': {
-        target: 'https://drive-away.vercel.app', // Replace with your API server URL if needed
-        changeOrigin: true,
-        rewrite: (req) => req.url.startsWith('/api') ? req.url : '/index.html',
-      },
-      // Add more proxy rules if needed
-    },
+    // Enable server middleware
+    middleware: createCustomMiddleware(),
   },
 });
+
+function createCustomMiddleware() {
+  return (req, res, next) => {
+    // Custom middleware for handling client-side routing fallback
+    const { url } = req;
+    if (url.startsWith('/api')) {
+      // Handle API requests as usual
+      next();
+    } else {
+      // Serve index.html for all other routes
+      req.url = '/index.html';
+      next();
+    }
+  };
+}

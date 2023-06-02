@@ -1,5 +1,5 @@
-import React from 'react'
-import { useToggle, upperFirst } from '@mantine/hooks';
+import React, { useRef, useState } from 'react'
+import { useToggle, upperFirst, useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
@@ -12,25 +12,38 @@ import {
   Checkbox,
   Anchor,
   Stack,
+  LoadingOverlay,
+  Modal,
+  PinInput
 } from '@mantine/core';
 import styles from '../../styles/login.module.css';
 import { google } from '../../assets/asset';
 import ReCAPTCHA from "react-google-recaptcha";
-import { useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { url } from '../authorization';
+import { useDispatch } from 'react-redux';
+import { login, closeDrawer } from '../../features/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { notification } from '../notification';
+
+
 
 export default function AuthenticationForm(props) {
-  const url = 'http://localhost:5000' // server;
-  const url2 = "http://localhost:3000" // client 
-  const navigate = useNavigate();
   const [type, toggle] = useToggle([props.toggle1, props.toggle2]);
   const captchaRef = useRef(null);
   const [capthca, setCaptcha] = useState(false);
+  const [visible, toggleDisclosure] = useToggle([false, true]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [pin, setPin] = useState('');
 
-  // const redirect = (endpoint) => {
-  //   navigate(endpoint);
-  // }
+  const redirect = (endpoint) => {
+    navigate(endpoint)
+  }
+  const handlePinChange = (value) => {
+    setPin(value);
+  };
 
   const form = useForm({
     initialValues: {
@@ -47,29 +60,55 @@ export default function AuthenticationForm(props) {
     },
   });
 
-  const handleSubmit = async() => {
+  const handleSubmitOTP = async () => {
+    const id = sessionStorage.getItem("id");
+    const req = await fetch(`${url}/otp/verify?id=${id}&token=${pin}`);
+    const res = await req.json();
+    if (res.ok) {
+      dispatch(login({ token: res.token, profilePic: res.profilePic, id: res.id, twoFA:true }));
+      dispatch(closeDrawer());
+      // sessionStorage.setItem('token', res.token);
+      notification('Login Successfull', 'Welcome to Drive Away', 'white', '#66BB6A');
+      sessionStorage.removeItem("id");
+      redirect('/dashboard');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: res.message,
+        text: '',
+      })
+    }
+  }
+
+  const handleSubmit = async () => {
     const token = captchaRef?.current?.getValue();
     if (!token && type == 'register') {
       // reCAPTCHA is not completed, handle the error or show a message
       setCaptcha(true);
+      toggleDisclosure();
       return;
     }
     setCaptcha(false);
     captchaRef?.current?.reset();
-    
-    if(type === 'login'){
-      const req = await fetch(`${url}/user/login`,{
-        method:"POST",
-        headers:{
-          "content-type":"application/json"
+
+    if (type === 'login') {
+      const req = await fetch(`${url}/user/login`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
         },
-        body:JSON.stringify({email:form.values.email,pass:form.values.password})
+        body: JSON.stringify({ email: form.values.email, pass: form.values.password })
       })
       const res = await req.json();
-      if(res.ok){
-        sessionStorage.setItem('token',res.token);
-        // props.close();
-        window.location.href = `${url2}/dashboard`;
+      if (res.ok) {
+        dispatch(login({ token: res.token, profilePic: res.profilePic, id: res.id, twoFA:false }));
+        dispatch(closeDrawer());
+        // sessionStorage.setItem('token', res.token);
+        notification('Login Successfull', 'Welcome to Drive Away', 'white', '#66BB6A');
+        redirect('/dashboard');
+      } else if (res.twoFA) {
+        open();
+        sessionStorage.setItem('id', res.id);
       } else {
         Swal.fire({
           icon: 'error',
@@ -79,27 +118,50 @@ export default function AuthenticationForm(props) {
       }
 
     } else {
-      const req = await fetch(`${url}/user/register`,{
-        method:"POST",
-        headers:{
-          "content-type":"application/json"
+      const req = await fetch(`${url}/user/register`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
         },
-        body:JSON.stringify({
-          email:form.values.email,
-          pass:form.values.password,
-          name:form.values.name,
-          address:form.values.address,
-          captcha:token,
+        body: JSON.stringify({
+          email: form.values.email,
+          pass: form.values.password,
+          name: form.values.name,
+          address: form.values.address,
+          captcha: token,
         })
       })
 
       const res = await req.json();
-      console.log(res);
-    }
-  }
 
+      if (res.ok) {
+        Swal.fire(
+          '',
+          res.message,
+          'success'
+        )
+        toggle();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: res.message,
+          text: '',
+        })
+      }
+    }
+    toggleDisclosure();
+  }
   return (
     <Paper radius="md" p="xl" {...props} className={styles.container}>
+      <Modal opened={opened} onClose={close} size="auto" centered>
+        <div className={styles.otp}>
+          <div><h3>Please Enter OTP from Authenticator to continue</h3></div>
+          <div><PinInput length={6} style={{margin:"auto"}} value={pin} onChange={handlePinChange} /></div>
+          <div><Button style={{ margin: "auto", marginTop: "10px" }} onClick={handleSubmitOTP}>
+            Verify & Activate
+          </Button></div>
+        </div>
+      </Modal>
       <Text size="lg" weight={500}>
         Welcome to Drive Away, {upperFirst(type)} with
       </Text>
@@ -110,8 +172,9 @@ export default function AuthenticationForm(props) {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => { handleSubmit() })}>
+      <form onSubmit={form.onSubmit(() => { toggleDisclosure(); handleSubmit() })}>
         <Stack>
+          <LoadingOverlay visible={visible} overlayBlur={2} />
           {type === 'register' && (
             <TextInput
               required
@@ -162,7 +225,7 @@ export default function AuthenticationForm(props) {
             />
           )}
           {type === 'register' && <ReCAPTCHA sitekey={import.meta.env.VITE_REACT_APP_SITE_KEY} ref={captchaRef} />}
-          {type==='register' && capthca && <div>Please Enter captcha</div>}
+          {type === 'register' && capthca && <div>Please Enter captcha</div>}
         </Stack>
 
         <Group position="apart" mt="xl">

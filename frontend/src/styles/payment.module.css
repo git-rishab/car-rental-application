@@ -1,0 +1,18 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: -20px;
+    margin-top: 20px;
+}
+
+.pick{
+   margin-bottom: 40px;
+}
+
+.img{
+    margin-bottom: 15px;
+}
+
+.img > img{
+    margin-right: 15px;
+}

@@ -9,6 +9,15 @@ const { UserModel } = require("../models/user.model");
 const userRoute = express.Router();
 require("dotenv").config();
 
+
+userRoute.get("/check", authorization , (req,res)=>{
+    try {
+        res.status(200).send({"ok":true, "message": "User is Logged In", "profilePic":req.user.profilePic, "id":req.user._id});
+    } catch (error) {
+        res.status(200).json({ "ok": false, "message": error.message })
+    }
+})
+
 userRoute.post("/register", async (req, res) => {
     try {
         const { name, profilePic, coverPic, aadhar, driving, email, address, pass, captcha } = req.body;
@@ -50,7 +59,7 @@ userRoute.post("/register", async (req, res) => {
 userRoute.post("/login", async (req, res) => {
     try {
         const { email, pass } = req.body;
-        const isUserExist = await UserModel.findOne({ email:email.toLowerCase() });
+        const isUserExist = await UserModel.findOne({ email:email.toLowerCase() }).populate('rentedCars listedCars wishlist');
         if (isUserExist) {
 
             bcrypt.compare(pass, isUserExist.pass, async (err, result)=> {
@@ -60,9 +69,12 @@ userRoute.post("/login", async (req, res) => {
                         user: isUserExist
                     }, process.env.SECRET , { expiresIn: '1h' });
 
-                    // res.cookie("token",token);
-                    res.status(200).json({"ok":true, "message":"Login Successfull", token})
-                    
+                    if(isUserExist.twoFA){
+                        res.status(200).json({"ok":false,twoFA:true, "message":"Enter OTP from Authenticator", id:isUserExist._id})
+                    } else {
+                        res.status(200).json({"ok":true, "message":"Login Successfull", token,profilePic:isUserExist.profilePic, id:isUserExist._id})
+                    }
+
                 } else {
                     res.status(401).json({ "ok": false, "message": "Wrong Credentials" });
                 }
@@ -76,7 +88,7 @@ userRoute.post("/login", async (req, res) => {
     }
 })
 
-userRoute.get("/logout", async(req,res)=>{
+userRoute.get("/logout", authorization,async(req,res)=>{
     try {
         await client.set(req.headers.authorization,'blacklist');
         await client.expire(req.headers.authorization,3600);
@@ -86,10 +98,83 @@ userRoute.get("/logout", async(req,res)=>{
     }
 })
 
-userRoute.get("/", authorization,(req,res)=>{
+userRoute.get("/", authorization,async(req,res)=>{
     try {
-        const user = req.user;
-        res.status(200).json({"ok":true, "data":user});
+        const user = await UserModel.findById(req.user._id).populate('rentedCars listedCars wishlist');
+        res.status(200).json({"ok":true, "data":{
+            email:user.email,
+            listedCars:user.listedCars,
+            address:user.address,
+            rentedCars:user.rentedCars,
+            wishlist:user.wishlist,
+            profilePic:user.profilePic,
+            name:user.name,
+            twoFA:user.twoFA
+        }});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+userRoute.patch("/wishlist/add", authorization,async(req,res)=>{
+    try {
+        const { carId } = req.query;
+        await UserModel.findByIdAndUpdate(req.user._id, {
+            $addToSet: {wishlist: carId}
+        })
+        res.status(200).json({"ok":true, "message":"Added to wishlist"});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+userRoute.patch("/wishlist/remove", authorization, async(req,res)=>{
+    try {
+        const { carId } = req.query;
+        await UserModel.findByIdAndUpdate(
+            req.user._id,
+            { $pull: { wishlist: carId } }
+        );
+        res.status(200).json({"ok":true, "message":"Wishlist updated"});
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+// Update Password and user Information
+userRoute.patch("/update/password", authorization,async(req,res)=>{
+    const { currentPassword, newPassword, name, address, profilePic } = req.body;
+    const { pass } = await UserModel.findById(req.user._id);
+    try {
+        bcrypt.compare(currentPassword, pass, async (err, result)=> {
+            // result == true
+            if(result){
+
+                bcrypt.hash(newPassword, 5, async (err, hash) => {
+                    try {
+                        await UserModel.findByIdAndUpdate(req.user._id, {pass:hash, name,address, profilePic});
+                        
+                        res.status(200).json({ "ok": true, "message": "Details Updated Successfully" });
+                    } catch (error) {
+                        res.status(400).json({ "ok": false, "message": error.message })
+                    }
+                });
+
+            } else {
+                res.status(401).json({ "ok": false, "message": "Wrong Password" });
+            }
+        });
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+// Update User Information only
+userRoute.patch("/update/details", authorization,async(req,res)=>{
+    try {
+        const { name, address, profilePic } = req.body;
+        await UserModel.findByIdAndUpdate(req.user._id, {name,address,profilePic});
+        res.status(200).json({ "ok": true, "message": "Details Updated Successfully" });
     } catch (error) {
         res.status(400).json({ "ok": false, "message": error.message })
     }

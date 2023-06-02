@@ -3,10 +3,20 @@ import styles from "../styles/carModal.module.css";
 import styles2 from "../styles/card.module.css";
 import { useDisclosure } from '@mantine/hooks';
 import { Drawer } from '@mantine/core';
+import { useSelector } from 'react-redux';
+import { notification } from './notification';
+import Payment from './Payment';
 
 export default function CarModal(props) {
     const [opened, { open, close }] = useDisclosure(false);
-
+    const { token } = useSelector((store)=>store.user);
+    const handleRent = ()=>{
+        if(token){
+            open();
+        } else {
+            notification(null, 'Please Login First', 'white', '#F44336');
+        }
+    }
   return (
     <div className={styles.container}>
         <div>
@@ -14,15 +24,17 @@ export default function CarModal(props) {
                 <img src={props.car.heroImg} alt="background" />
             </div>
             <div className={styles.pics}>
-                <div className={styles.background2} style={{height: '110px'}}>
-                    <img src={props.car.heroImg} alt="car" />
-                </div>
-                <div>
-                    <img src={props.car.images[0]} alt="view1" />
-                </div>
-                <div>
-                    <img src={props.car.images[1]} alt="view2" />
-                </div>
+                {
+                    props.car?.images.map((el,i)=>{
+                        return i === 0 ? (<div key={i} className={styles.background2} style={{height: '110px'}}>
+                        <img src={el} alt="car" />
+                    </div>) : 
+                         (<div key={i} >
+                        <img src={el} alt="car" />
+                    </div>)
+                    })
+                }
+                
             </div>
         </div>
 
@@ -47,9 +59,9 @@ export default function CarModal(props) {
             <div className={styles.rent}>
                 <div><p className={styles2.price}>₹{props.car.rentPrice}.00/<span className={styles2.type}>days</span></p></div>
                 <Drawer opened={opened} onClose={close}>
-                    <div>Hi</div>
+                    <Payment name={props.car.title} description={props.car.description} price = {props.car.rentPrice} id={props.car._id} />
                 </Drawer>
-                <div className={styles2.more} onClick={open}>Rent Now</div>
+                <div className={styles2.more} onClick={handleRent}>Rent Now</div>
             </div>
 
         </div>

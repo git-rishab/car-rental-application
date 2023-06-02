@@ -3,7 +3,7 @@ const { client } = require("../config/db");
 require("dotenv").config();
 
 const authorization = (req,res,next) => {
-    const token = req.headers.authorization;
+    const token = req.headers?.authorization;
 
     jwt.verify(token, process.env.SECRET, async (err, decoded)=> {
         try {
@@ -12,7 +12,8 @@ const authorization = (req,res,next) => {
                 return res.status(401).json({"ok":false, "message":"Please Login Again"})
             }
             if(err){
-                return res.status(400).json({"ok":false, "message":err.message})
+                console.log(err.message);
+                return res.status(400).json({"ok":false, "message":"Please Login First"})
             }
             if(decoded){
                 req.user = decoded.user;
@@ -20,7 +21,8 @@ const authorization = (req,res,next) => {
             }
             
         } catch (error) {
-            res.status(400).json({ "ok": false, "message": error.message })
+            console.log(error.message);
+            res.status(400).json({ "ok": false, "message": "Please Login First" })
         }
     });
 }

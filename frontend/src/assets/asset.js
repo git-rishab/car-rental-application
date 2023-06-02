@@ -14,6 +14,7 @@ import users from './users.png';
 import background from './background.png';
 import view1 from './View2.png';
 import view2 from './View3.png';
+import unauthorized from './unauthorized.png';
 
 
 export {
@@ -32,5 +33,6 @@ export {
     users,
     background,
     view1,
-    view2
+    view2,
+    unauthorized,
 }

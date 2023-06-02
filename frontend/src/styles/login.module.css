@@ -23,3 +23,14 @@ nav .container{
     border: none;
     width: fit-content;
 }
+
+.otp{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: sans-serif;
+}
+.otp > div{
+    margin-top: 13px;
+}

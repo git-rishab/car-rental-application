@@ -5,6 +5,7 @@ const {logger} = require("./middlewares/logger.middleware");
 const { connection, client } = require("./config/db");
 const { userRoute } = require("./routes/user.routes");
 const { carRoute } = require("./routes/car.routes");
+const { otpRoute } = require("./routes/otp.routes");
 require("dotenv").config();
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req,res)=>{
 
 app.use("/user",userRoute);
 app.use("/car", carRoute);
+app.use("/otp", otpRoute);
 
 
 app.get("*",(req,res)=>{

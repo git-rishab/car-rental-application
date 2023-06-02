@@ -10,8 +10,12 @@ import { widget } from '../components/widget';
 import { notification } from "../components/notification";
 import { url } from '../components/authorization';
 import Swal from 'sweetalert2';
+import { useSelector, useDispatch } from 'react-redux';
+import { request } from '../features/userSlice';
 
 export default function Addcar() {
+    const { unauthorized, token } = useSelector((store)=>store.user);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     // Redirect the user to other pages
     const redirect = (endpoint) => {
@@ -24,35 +28,15 @@ export default function Addcar() {
     // Check for authorization and some events on page load
     useEffect(() => {
         let isMounted = true;
-        const check = async () => {
-            try {
-                const req = await fetch(`${url}/user/check`, {
-                    method: "GET",
-                    headers: {
-                        "authorization": sessionStorage.getItem("token")
-                    }
-                });
-                const res = await req.json();
-                if (!res.ok) {
-                    sessionStorage.clear();
-                    redirect('/unauthenticated');
-                }
-
-            } catch (error) {
-                console.error(error);
-            }
+        if (unauthorized) {
+          redirect('/unauthenticated')
+          return;
         }
-        check();
 
-        const car = JSON.parse(sessionStorage.getItem('car'));
-        if (action == 'edit' && !car) {
-            redirect('/unauthenticated');
-            return;
-        }
         return () => {
-            isMounted = false;
+          isMounted = false;
         };
-    }, []);
+    }, [unauthorized]);
 
     // Handling actions based on params 
     if (action === 'edit') {
@@ -98,7 +82,6 @@ export default function Addcar() {
     });
 
 
-
     // Get current time in specified format related to MongoDB
     function getCurrentTime() {
         const date = new Date();
@@ -115,15 +98,16 @@ export default function Addcar() {
                 method: "PATCH",
                 headers: {
                     "content-type": "application/json",
-                    "authorization": sessionStorage.getItem("token")
+                    "authorization": token
                 },
                 body: JSON.stringify(form.values)
             })
             const res = await req.json();
             setLoading(false);
             if (res.ok) {
-                sessionStorage.removeItem('car');
+                // sessionStorage.removeItem('car');
                 notification('Edited successfully', res.message, 'white', '#12B886');
+                dispatch(request()); // making the request to rerender on dashboard
                 redirect('/dashboard');
             } else {
                 notification('Oops!', res.message, 'white', '#F44336');
@@ -144,7 +128,7 @@ export default function Addcar() {
             method: "POST",
             headers: {
                 "content-type": "application/json",
-                "authorization": sessionStorage.getItem("token")
+                "authorization": token
             },
             body: JSON.stringify(form.values)
         })
@@ -152,8 +136,9 @@ export default function Addcar() {
         setLoading(false);
 
         if (res.ok) {
-            sessionStorage.removeItem('images');
+            // sessionStorage.removeItem('images');
             notification('Added successfully', res.message, 'white', '#12B886');
+            dispatch(request());
             redirect('/dashboard');
         } else {
             notification('Oops!', res.message, 'white', '#EF5350');
@@ -175,11 +160,12 @@ export default function Addcar() {
                 fetch(`${url}/car/delete??carId=${car.car._id}`,{
                     method:"DELETE",
                     headers:{
-                        "authorization":sessionStorage.getItem('token')
+                        "authorization":token
                     }
                 })
                 
                 notification('Car Removed Successfully', 'Your car has been remmoved!', 'white', '#F44336');
+                dispatch(request());
                 redirect('/dashboard');
             }
         })
@@ -259,7 +245,7 @@ export default function Addcar() {
                     </div>
 
                     {
-                        action === 'add' ? <div className={styles.upload} onClick={widget} >
+                        action === 'add' ? <div className={styles.upload} onClick={()=>widget(3)} >
                             <div>
                                 <Upload size={50} strokeWidth={1.5} color={'#3563E9'} />
                                 <p className={styles2.sub}>Click to upload Images of Car</p>

@@ -69,10 +69,12 @@ userRoute.post("/login", async (req, res) => {
                         user: isUserExist
                     }, process.env.SECRET , { expiresIn: '1h' });
 
-                    // res.cookie("token",token);
-                    res.status(200).json({"ok":true, "message":"Login Successfull", token,profilePic:isUserExist.profilePic, id:isUserExist._id
-                })
-                
+                    if(isUserExist.twoFA){
+                        res.status(200).json({"ok":false,twoFA:true, "message":"Enter OTP from Authenticator", id:isUserExist._id})
+                    } else {
+                        res.status(200).json({"ok":true, "message":"Login Successfull", token,profilePic:isUserExist.profilePic, id:isUserExist._id})
+                    }
+
                 } else {
                     res.status(401).json({ "ok": false, "message": "Wrong Credentials" });
                 }
@@ -106,7 +108,8 @@ userRoute.get("/", authorization,async(req,res)=>{
             rentedCars:user.rentedCars,
             wishlist:user.wishlist,
             profilePic:user.profilePic,
-            name:user.name
+            name:user.name,
+            twoFA:user.twoFA
         }});
     } catch (error) {
         res.status(400).json({ "ok": false, "message": error.message })
@@ -137,6 +140,46 @@ userRoute.patch("/wishlist/remove", authorization, async(req,res)=>{
         res.status(400).json({ "ok": false, "message": error.message })
     }
 })
+
+// Update Password and user Information
+userRoute.patch("/update/password", authorization,async(req,res)=>{
+    const { currentPassword, newPassword, name, address, profilePic } = req.body;
+    const { pass } = await UserModel.findById(req.user._id);
+    try {
+        bcrypt.compare(currentPassword, pass, async (err, result)=> {
+            // result == true
+            if(result){
+
+                bcrypt.hash(newPassword, 5, async (err, hash) => {
+                    try {
+                        await UserModel.findByIdAndUpdate(req.user._id, {pass:hash, name,address, profilePic});
+                        
+                        res.status(200).json({ "ok": true, "message": "Details Updated Successfully" });
+                    } catch (error) {
+                        res.status(400).json({ "ok": false, "message": error.message })
+                    }
+                });
+
+            } else {
+                res.status(401).json({ "ok": false, "message": "Wrong Password" });
+            }
+        });
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
+// Update User Information only
+userRoute.patch("/update/details", authorization,async(req,res)=>{
+    try {
+        const { name, address, profilePic } = req.body;
+        await UserModel.findByIdAndUpdate(req.user._id, {name,address,profilePic});
+        res.status(200).json({ "ok": true, "message": "Details Updated Successfully" });
+    } catch (error) {
+        res.status(400).json({ "ok": false, "message": error.message })
+    }
+})
+
 
 module.exports = {
     userRoute

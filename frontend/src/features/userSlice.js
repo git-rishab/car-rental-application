@@ -15,7 +15,8 @@ const initialState = {
     isOpenn:false, // from Navbar
     id:'', // from login page
     request: false,
-    unauthorized: true
+    unauthorized: true,
+    twoFactor:false
 };
 
 export const getUser = createAsyncThunk(
@@ -56,13 +57,15 @@ const userSlice = createSlice({
             state.isOpenn = false; // from Navbar
             state.id =''; // from login page
             state.request = false;
-            state.unauthorized = true
+            state.unauthorized = true;
             state.token = '';
+            state.twoFactor = false
         },
         login: (state, {payload})=>{
             state.token = payload.token;
             state.profilePic = payload.profilePic;
             state.id = payload.id;
+            state.twoFactor = payload.twoFA;
             state.unauthorized = false;
         },
         openDrawer: (state)=>{
@@ -73,6 +76,12 @@ const userSlice = createSlice({
         },
         request: (state)=>{
             state.request = false;
+        },
+        twoFactorAuth:(state)=>{
+            state.twoFactor = false;
+        },
+        enable2FA:(state)=>{
+            state.twoFactor = true;
         }
     },
     extraReducers: (builder) => {
@@ -83,6 +92,20 @@ const userSlice = createSlice({
             .addCase(getUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 if(!action.payload.ok){
+                    state.name = ''; // from dashboard
+                    state.email = ''; // from dashboard
+                    state.wishlist = []; // from dashboard
+                    state.address = ''; // from dashboard
+                    state.rentedCars = []; // from dashboard
+                    state.listedCars = []; // from dashboard
+                    state.isLoading = true; 
+                    state.profilePic =''; // from login page
+                    state.isOpenn = false; // from Navbar
+                    state.id =''; // from login page
+                    state.request = false;
+                    state.unauthorized = true
+                    state.token = '';
+                    state.twoFactor = false
                     return; 
                 }
                 state.unauthorized = false;
@@ -93,6 +116,7 @@ const userSlice = createSlice({
                 state.rentedCars = action.payload.data.rentedCars;
                 state.address = action.payload.data.address;
                 state.request = true;
+                state.twoFactor = action.payload.data.twoFA;
             })
             .addCase(getUser.rejected, (state, action) => {
                 // console.log(action);
@@ -102,6 +126,6 @@ const userSlice = createSlice({
 });
 
 // console.log(userSlice);
-export const { logOut, login, openDrawer, closeDrawer,request } = userSlice.actions;
+export const { logOut, login, openDrawer, closeDrawer,request, twoFactorAuth, enable2FA } = userSlice.actions;
 
 export default userSlice.reducer;

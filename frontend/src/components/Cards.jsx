@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { gas, transmission, like, unlike, users } from '../assets/asset';
 import styles from "../styles/card.module.css";
-import { useDisclosure } from '@mantine/hooks';
-import { Modal } from '@mantine/core';
+import { useDisclosure, useToggle } from '@mantine/hooks';
+import { Modal, Loader } from '@mantine/core';
 import CarModal from './CarModal';
-import { useToggle } from '@mantine/hooks';
 import { notification } from './notification';
-import { Loader } from '@mantine/core';
 import { useNavigate } from "react-router-dom";
 import { url } from './authorization';
 import { useSelector, useDispatch } from 'react-redux';

@@ -8,6 +8,8 @@ import {
     Group,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { logOut } from '../features/userSlice';
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -52,11 +54,12 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Page404() {
+    const dispatch = useDispatch();
     const { classes } = useStyles();
     const navigate = useNavigate();
 
     const redirect = (endpoint) => {
-        navigate(endpoint)
+        navigate(endpoint);
     }
 
     return (
@@ -73,7 +76,7 @@ export default function Page404() {
                 address, or the page has been moved to another URL.
             </Text>
             <Group position="center">
-                <Button variant="subtle" size="md" onClick={()=>redirect('/')}>
+                <Button variant="subtle" size="md" onClick={()=> {dispatch(logOut()); redirect('/')}}>
                     Take me back to home page
                 </Button>
             </Group>

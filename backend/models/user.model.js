@@ -66,6 +66,13 @@ const userSchema = mongoose.Schema({
         type:String,
         enum:['admin','user'],
         default:'user'
+    },
+    twoFA: {
+        type:Boolean,
+        default:false
+    },
+    secret:{
+        type:String
     }
 },{
     versionKey:false

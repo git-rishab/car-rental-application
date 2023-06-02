@@ -9,3 +9,15 @@
 .input{
     margin-top: 20px;
 }
+
+.auth{
+    background-color: #0E87FF;
+    width: 70%;
+    margin: auto;
+    color: #fff;
+    margin-top: 20px;
+}
+.auth:hover{
+    background-color: #449af0;
+    transition: background-color 0.3s ease;
+}

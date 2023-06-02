@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { unauthorized } from '../assets/asset';
+import { useDispatch } from "react-redux";
+import { logOut } from "../features/userSlice";
 
 const UnAuthenticated = () => {
     const [redirect, setRedirect] = useState(5);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     useEffect(() => {
         let inte = setInterval(() => {
             if (redirect <= 0) {
                 clearInterval(inte);
+                dispatch(logOut());
                 navigate("/");
                 return;
             }

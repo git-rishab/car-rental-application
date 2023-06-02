@@ -1,12 +1,12 @@
-function widget() {
+function widget(limit) {
   const config = {
     accept: ['image/*'], // default empty array - all files
     //maxSize: 1024, // default 0 - no limit
-    maxFiles: 3, // default 0 - no limit
+    maxFiles: limit, // default 0 - no limit
     failOverMaxFiles: false,
   }
   
-  const client = filestack.init('Az0PJPoS5QjWNxHxJsIYYz');
+  const client = filestack.init(import.meta.env.VITE_REACT_APP_FILESTACK_KEY);
   const options = {
     ...config,
     onFileUploadFinished(file) {

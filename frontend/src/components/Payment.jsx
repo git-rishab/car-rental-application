@@ -1,54 +1,46 @@
-import React from 'react'
-import { hero1, hero2, search, pickMark, dropMark } from '../assets/asset'
-import '../styles/homepage.css';
-import Card from '../components/Cards';
-import { useEffect, useState } from 'react';
-import { Loader, Select } from '@mantine/core';
-import styles from "../styles/dashboard.module.css";
-import { url } from '../components/authorization';
+import React from "react";
 import { DateTimePicker } from '@mantine/dates';
-import { useSelector } from 'react-redux';
+import { Select } from '@mantine/core';
+import { pickMark, dropMark } from '../assets/asset'
+import styles from "../styles/dashboard.module.css";
+import styles2 from "../styles/payment.module.css";
+import { url } from "./authorization";
+import { useSelector } from "react-redux";
+import { notification } from "./notification";
 
-export default function Homepage() {
-  const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const { id:loggedIn } = useSelector((store)=>store.user);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const req = await fetch(`${url}/car`);
-        const res = await req.json();
-        if (isMounted) {
-          setLoading(false);
-          setCars(res.cars);
-        }
-      } catch (error) {
-        // Handle error here
-        console.error(error);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+export default function Payment(props) {
+  const { token } = useSelector((store)=>store.user);
+  const handlePayment = async()=>{
+    const req = await fetch(`${url}/car/payment`,{
+      method:"POST",
+      headers:{
+        "content-type":"application/json",
+        "authorization":token
+      },
+      body:JSON.stringify({
+        name:props.name,
+        description:props.description,
+        price:props.price,
+        day:"1",
+        start:"",
+        end:"",
+        id:props.id
+      })
+    });
+    const res = await req.json();
+    if(res.ok){
+      window.location.href = res.url;
+    } else {
+      notification(null, res.message, 'white', '#F44336');
+    }
+  }
 
   return (
-    <section id='homepage'>
-      <div id='hero'>
-        <div><img src={hero1} alt="Hero1" /></div>
-        <div><img src={hero2} alt="Hero2" /></div>
-      </div>
-
-      <div id='pick-drop'>
-        <div className='drop-pick'>
-          <div>
+    <section>
+      <h1>Please Select Pick-Up and Drop-Off Timing and Location</h1>
+      <div className={styles2.container}>
+        <div className={styles2.pick}>
+          <div className={styles2.img}>
             <img src={pickMark} alt="pick" />
             Pick-Up
           </div>
@@ -86,12 +78,8 @@ export default function Homepage() {
           </div>
         </div>
 
-        <div className='search'>
-          <img src={search} alt="" />
-        </div>
-
-        <div className='drop-pick'>
-          <div>
+        <div className={styles2.pick}>
+          <div className={styles2.img}>
             <img src={dropMark} alt="drop" />
             Drop-Off
           </div>
@@ -130,27 +118,9 @@ export default function Homepage() {
 
         </div>
       </div>
-
-      <p className='sub-head'>Popular cars</p>
-
-
-      {
-        loading ?
-          (<div className={styles.loader}>
-            <Loader size="lg" />
-            <p>Fetching the best available cars for you...</p>
-          </div>)
-          : (
-            <div className='container'>
-              {
-                cars?.map((el, i) => {
-                  return <Card key={i} car={el} rent={loggedIn === el.listedBy ? false : true} like={loggedIn === el.listedBy ? false : true} />
-                })
-              }
-            </div>
-          )
-      }
-
+      <div className={styles.more} onClick={handlePayment}>
+        Pay Now
+      </div>
     </section>
   )
-}
+};

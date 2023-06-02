@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const url = 'http://localhost:5000';
+const url = 'https://car-rental-nnqy.onrender.com';
 
 const initialState = {
     token: '', // from login page

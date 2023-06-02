@@ -1,4 +1,4 @@
-const url = "http://localhost:5000";
+const url = "https://car-rental-nnqy.onrender.com";
 const client = "http://localhost:3000"
 
 

@@ -59,8 +59,8 @@ carRoute.post('/payment', authorization,async(req,res) => {
                 },
             ],
             mode: 'payment',
-            success_url: `http://localhost:3000/dashboard?events=paymentsuccess&id=${id}&start=${start}&end=${end}`,
-            cancel_url: 'http://localhost:3000/dashboard?events=paymentfailure',
+            success_url: `https://drive-away.netlify.app/dashboard?events=paymentsuccess&id=${id}&start=${start}&end=${end}`,
+            cancel_url: 'https://drive-away.netlify.app/dashboard?events=paymentfailure',
         });
         res.status(303).send({"ok":true,"url":session.url});
     } catch (error) {

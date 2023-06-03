@@ -65,7 +65,7 @@ export default function Dashboard() {
     return () => {
       isMounted = false;
     };
-  }, [request, unauthorized]);
+  }, [request, unauthorized, token]);
 
   const handleLogOut = async () => {
     const req = await fetch(`${url}/user/logout`, {

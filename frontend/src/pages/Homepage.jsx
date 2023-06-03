@@ -46,7 +46,7 @@ export default function Homepage() {
         <div><img src={hero2} alt="Hero2" /></div>
       </div>
 
-      <div id='pick-drop'>
+      {/* <div id='pick-drop'>
         <div className='drop-pick'>
           <div>
             <img src={pickMark} alt="pick" />
@@ -129,7 +129,7 @@ export default function Homepage() {
           </div>
 
         </div>
-      </div>
+      </div> */}
 
       <p className='sub-head'>Popular cars</p>
 

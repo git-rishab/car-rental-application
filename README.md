@@ -37,7 +37,7 @@ To get started with the Car Rent Application, follow the steps below.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/car-rent-application.git
+   git clone https://github.com/git-rishab/car-rental-application.git
   
 2. Install Dependencies:
 
@@ -82,3 +82,11 @@ The Car Rent Application provides the following API endpoints:
    - `GET /otp/validate` : Validates the OTP while set up
    - `GET /otp/verify` : Verifies the OTP everytime user Logs In
    - `GET /otp/disable` : Removes the 2FA
+
+## Glimpse of Website!
+[LandingPage](https://github.com/git-rishab/car-rental-application/assets/114337213/a5501d84-b7a1-4acd-8c49-8219cc2fa8ba)
+![Individual Car](https://github.com/git-rishab/car-rental-application/assets/114337213/cdc5c7e5-72b7-4ffa-b4d7-e7a8fb2e9ee6)
+![Dashboard](https://github.com/git-rishab/car-rental-application/assets/114337213/ba98167f-7062-48ab-8339-22efb5a54b5d)
+![2FA](https://github.com/git-rishab/car-rental-application/assets/114337213/ad548d05-3edc-4415-8698-fb6ac551fd30)
+![Add cars](https://github.com/git-rishab/car-rental-application/assets/114337213/5a31246c-b29f-4ef7-aded-e9c9704f5470)
+![Payment Gateway](https://github.com/git-rishab/car-rental-application/assets/114337213/636e5326-0f9f-493c-8f59-6dee7e35fe8d)

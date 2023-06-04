@@ -83,10 +83,14 @@ The Car Rent Application provides the following API endpoints:
    - `GET /otp/verify` : Verifies the OTP everytime user Logs In
    - `GET /otp/disable` : Removes the 2FA
 
+## Schema Design
+
+![Schema Design](https://github.com/git-rishab/car-rental-application/assets/114337213/be373ceb-7021-46b2-af38-b2bb6bc0aa16)
+
 ## Glimpse of Website!
-[LandingPage](https://github.com/git-rishab/car-rental-application/assets/114337213/a5501d84-b7a1-4acd-8c49-8219cc2fa8ba)
-![Individual Car](https://github.com/git-rishab/car-rental-application/assets/114337213/cdc5c7e5-72b7-4ffa-b4d7-e7a8fb2e9ee6)
-![Dashboard](https://github.com/git-rishab/car-rental-application/assets/114337213/ba98167f-7062-48ab-8339-22efb5a54b5d)
-![2FA](https://github.com/git-rishab/car-rental-application/assets/114337213/ad548d05-3edc-4415-8698-fb6ac551fd30)
-![Add cars](https://github.com/git-rishab/car-rental-application/assets/114337213/5a31246c-b29f-4ef7-aded-e9c9704f5470)
-![Payment Gateway](https://github.com/git-rishab/car-rental-application/assets/114337213/636e5326-0f9f-493c-8f59-6dee7e35fe8d)
+![Landing Page](https://github.com/git-rishab/car-rental-application/assets/114337213/33cf9f1d-78d0-40ab-80cb-e51f3737c62e)
+![Individual car](https://github.com/git-rishab/car-rental-application/assets/114337213/6cbea855-dc24-4e3b-b755-5383d1fefd8b)
+![Dashboard](https://github.com/git-rishab/car-rental-application/assets/114337213/5c9b20c5-7ab2-4bbf-ba1d-4c7471045fff)
+![2FA](https://github.com/git-rishab/car-rental-application/assets/114337213/bbee765d-2943-4170-b7f1-1e71f283e2e1)
+![Add car](https://github.com/git-rishab/car-rental-application/assets/114337213/cc8a6aa5-4794-4671-9dbe-aee3891ce92b)
+![Payment Gateway](https://github.com/git-rishab/car-rental-application/assets/114337213/c751031d-60d3-4c1b-a0fe-6e4f356450eb)

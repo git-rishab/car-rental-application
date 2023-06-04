@@ -19,7 +19,7 @@ The Car Rent Application is a web-based platform that allows users to rent cars 
 
 The Car Rent Application is built using the following technologies:
 
-- Frontend: React, Maintain UI, Redux
+- Frontend: React, Mantine UI, Redux
 - Backend: Node.js, Redis, Express, MongoDB
 
 ## Key Features

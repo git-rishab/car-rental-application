@@ -12,7 +12,6 @@
 
 The Car Rent Application is a web-based platform that allows users to rent cars according to their needs. It provides a user-friendly interface for renting cars and listing cars for rent. The application utilizes modern technologies such as React, Maintain UI, Redux, Node.js, Redis, Express, and MongoDB to deliver a seamless user experience.
 
-![Website Preview](preview.png)
 
 ## Tech Stack
 

@@ -7,6 +7,8 @@
 - [Key Features](#key-features)
 - [Getting Started](#getting-started)
 - [API Endpoints](#api-endpoints)
+- [Schema Design](#schema-design)
+- [Glimpse of website](#glimpse-of-website)
 
 ## Introduction
 
@@ -93,4 +95,5 @@ The Car Rent Application provides the following API endpoints:
 ![Dashboard](https://github.com/git-rishab/car-rental-application/assets/114337213/5c9b20c5-7ab2-4bbf-ba1d-4c7471045fff)
 ![2FA](https://github.com/git-rishab/car-rental-application/assets/114337213/bbee765d-2943-4170-b7f1-1e71f283e2e1)
 ![Add car](https://github.com/git-rishab/car-rental-application/assets/114337213/cc8a6aa5-4794-4671-9dbe-aee3891ce92b)
-![Payment Gateway](https://github.com/git-rishab/car-rental-application/assets/114337213/c751031d-60d3-4c1b-a0fe-6e4f356450eb)
+![Payment Gateway](https://github.com/git-rishab/car-rental-application/assets/114337213/bdc43f11-d2d8-401d-9eb4-40a6541cd982)
+

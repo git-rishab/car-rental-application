@@ -1,5 +1,6 @@
-const url = "https://car-rental-nnqy.onrender.com";
-const client = "http://localhost:3000"
+// const url = "https://car-rental-nnqy.onrender.com";
+const url = "https://hungry-bandanna-newt.cyclic.app";
+const client = "https://drive-away.netlify.app"
 
 
 const authorization = async () => {

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const url = 'https://car-rental-nnqy.onrender.com';
+const url = 'https://hungry-bandanna-newt.cyclic.app';
 
 const initialState = {
     token: '', // from login page

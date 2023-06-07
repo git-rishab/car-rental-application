@@ -6,6 +6,7 @@ const { connection, client } = require("./config/db");
 const { userRoute } = require("./routes/user.routes");
 const { carRoute } = require("./routes/car.routes");
 const { otpRoute } = require("./routes/otp.routes");
+const { authRoute } = require("./routes/auth.routes");
 require("dotenv").config();
 
 const app = express();
@@ -22,6 +23,7 @@ app.get("/", (req,res)=>{
 app.use("/user",userRoute);
 app.use("/car", carRoute);
 app.use("/otp", otpRoute);
+app.use("/auth", authRoute);
 
 
 app.get("*",(req,res)=>{

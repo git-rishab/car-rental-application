@@ -167,7 +167,7 @@ export default function AuthenticationForm(props) {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <div className={styles.google}><img src={google} alt="" />Google</div>
+        <div onClick={()=> window.location.href = `${url}/auth/google`} className={styles.google}><img src={google} alt="" />Google</div>
       </Group>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />

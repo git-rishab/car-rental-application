@@ -11,6 +11,7 @@ import { url } from '../components/authorization';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, logOut } from '../features/userSlice';
 import { useParams } from 'react-router-dom';
+import { login } from '../features/userSlice';
 
 export default function Dashboard() {
   var { token, email, address, name, wishlist, listedCars, rentedCars, unauthorized, profilePic, request } = useSelector((store) => store.user);
@@ -25,14 +26,24 @@ export default function Dashboard() {
   // Calling APIs and Checking for authorization
   useEffect(() => {
     let isMounted = true;
-    // console.log(unauthorized);
+    const urlParams = new URLSearchParams(location.search);
+    const events = urlParams.get("events");
+    const googleAuth = urlParams.get("google");
+    if(googleAuth){
+      const profilePic = urlParams.get("profilePic");
+      const token2 = urlParams.get("token");
+      const id = urlParams.get("id");
+      dispatch(login({ token: token2, profilePic, id, twoFA:false }));
+      notification('Login Successfull', 'Welcome to Drive Away', 'white', '#66BB6A');
+      unauthorized = false;
+    }
+
     if (unauthorized) {
-      console.log('dashboard', unauthorized);
       redirect('/unauthenticated')
       return;
     }
-    const urlParams = new URLSearchParams(location.search);
-    const events = urlParams.get("events");
+    
+
     // Notification for payment things
     if(events == "paymentfailure"){
       notification('Payment Cancelled', 'No money was Deducted', 'white', '#F44336');
@@ -48,7 +59,7 @@ export default function Dashboard() {
           "authorization":token
         },
         body:JSON.stringify({carId:id})
-      }).then((raw)=>raw.json()).then((res)=>request=false);
+      }).then((raw)=>raw.json()).then((res)=>dispatch(getUser('/user')));
     }
 
 

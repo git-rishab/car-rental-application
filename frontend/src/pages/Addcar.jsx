@@ -157,14 +157,15 @@ export default function Addcar() {
             confirmButtonText: 'Yes, Remove!'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`${url}/car/delete??carId=${car.car._id}`,{
+                const car = JSON.parse(sessionStorage.getItem("car"));
+                fetch(`${url}/car/delete?carId=${car.car._id}`,{
                     method:"DELETE",
                     headers:{
                         "authorization":token
                     }
                 })
                 
-                notification('Car Removed Successfully', 'Your car has been remmoved!', 'white', '#F44336');
+                notification('Car Removed Successfully', 'Your car has been removed!', 'white', '#F44336');
                 dispatch(request());
                 redirect('/dashboard');
             }

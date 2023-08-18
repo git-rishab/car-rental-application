@@ -52,7 +52,7 @@ export default function Dashboard() {
       const start = urlParams.get('start');
       const end = urlParams.get('end');
       const id = urlParams.get('id'); 
-      fetch(`${url}/car/rent`,{
+      fetch(`${url}/car/rent?carId=${id}`,{
         method:"PATCH",
         headers:{
           "content-type":"application/json",
